@@ -1,12 +1,16 @@
 const theme = {
   colors: {
-    background: '#ffffff',
-    text: '#000000',
+    background: '#14bdac',
+    text: '#fff',
   },
 
   fonts: {
     regular: 'Lato_400Regular'
   },
+
+  sizes: {
+    cellSize: '64px',
+  }
 };
 
 export default theme;

@@ -3,10 +3,12 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback } from 'react';
-import { SafeAreaView } from 'react-native';
 import { ThemeProvider } from 'styled-components';
-import Board from './src/screens/Board';
-import theme from './src/styles/theme';
+import Board from '../src/components/Board';
+import theme from './../src/styles/theme';
+import { AppWrapper } from './styles';
+import { View } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,11 +26,12 @@ export default function App() {
   }
 
   return (
-    <SafeAreaView onLayout={onLayoutRootView}>
+    <AppWrapper onLayout={onLayoutRootView}>
       <ThemeProvider theme={theme}>
         <StatusBar style="auto" />
+        <View style={{ height: getStatusBarHeight() }} />
         <Board />
       </ThemeProvider>
-    </SafeAreaView>
+    </AppWrapper>
   );
 }
