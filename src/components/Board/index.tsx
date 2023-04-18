@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Cell from '../Cell';
 import DifficultyLevelType from '../../types/DifficultyLevelType';
 import MatchType from '../../types/MatchType';
-import OptionGameType from '../../types/OptionGameType';
+import GameOptionType from '../../types/GameOptionType';
 import { BoardWrapper, BottomCell, BottomLeftCell, BottomRightCell, CenterCell, LeftCell, RightCell, Row, TopCell, TopLeftCell, TopRightCell } from './styles';
 import CellType from '../../types/CellType';
+import { useEffectDeps } from '../../utils/react_utils';
 
 const Board = () => {
-  const [optionGame, setOptionGame] = useState<OptionGameType>('Contra a Máquina');
+  const [gameOption, setGameOption] = useState<GameOptionType>('Contra a Máquina');
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevelType>('Fácil');
   const [isFirstPlayerTurn, setIsFirstPlayerTurn] = useState<boolean>(true);
   const [firstPlayerScore, setFirstPlayerScore] = useState<number>(0); // X
@@ -22,9 +23,9 @@ const Board = () => {
 
     for (let i = 0; i < 3; ++i) {
       board[i] = [];
-
       for (let j = 0; j < 3; ++j) {
-        board[i][j] = {} as CellType;
+        const cell: CellType = { rowPosition: i, columnPosition: j };
+        board[i][j] = cell;
       }
     }
 
@@ -36,16 +37,48 @@ const Board = () => {
     console.log('A posição', rowPosition, columnPosition, 'foi marcada!');
 
     let currentBoard = [...board];
-    let cell: CellType = { mark: isFirstPlayerTurn ? 'X' : 'O' };
+    let cell: CellType = {
+      rowPosition,
+      columnPosition,
+      mark: isFirstPlayerTurn ? 'X' : 'O'
+    };
 
     currentBoard[rowPosition][columnPosition] = cell;
 
     setIsFirstPlayerTurn(!isFirstPlayerTurn);
   }
 
+  const fightBack = () => {
+    let currentBoard = [...board];
+
+    switch(difficultyLevel) {
+      case 'Fácil':
+        console.log(currentBoard.flat());
+        break;
+
+      case 'Médio':
+
+        break;
+
+      case 'Difícil':
+
+        break;
+      
+      default:
+        throw new Error('Invalid difficulty level.');
+    }
+  }
+
   useEffect(() => {
     initializeBoard();
   }, []);
+
+  // Contra a Máquina
+  useEffectDeps(() => {
+    if (!isFirstPlayerTurn && gameOption === 'Contra a Máquina') {
+      fightBack();
+    }
+  }, [isFirstPlayerTurn]);
 
   return (
     <BoardWrapper>
