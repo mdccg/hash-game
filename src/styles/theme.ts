@@ -1,6 +1,7 @@
 const theme = {
   colors: {
     background: '#14bdac',
+    border: '#70757a',
     text: '#fff',
   },
 
@@ -9,7 +10,8 @@ const theme = {
   },
 
   sizes: {
-    cellSize: '64px',
+    cellSize: '100px',
+    borderSize: '4px',
   }
 };
 

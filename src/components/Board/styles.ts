@@ -1,5 +1,5 @@
-import styled from 'styled-components/native';
-import Cell from '../Cell';
+import styled, { css } from 'styled-components/native';
+import Cell from './../Cell';
 
 export const BoardWrapper = styled.View`
   background-color: ${({ theme }) => theme.colors.background};
@@ -10,6 +10,55 @@ export const Row = styled.View`
   flex-direction: row;
 `;
 
-export const TopLeftCell = styled(Cell)`
+const sharedStyles = css`
+  border-style: solid;
+  border-color: ${({ theme }) => theme.colors.border};
+`;
 
+export const TopLeftCell = styled(Cell)`
+  ${sharedStyles};
+  border-right-width: ${({ theme })  => theme.sizes.borderSize};
+  border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
+`;
+
+export const TopCell = styled(Cell)`
+  ${sharedStyles};
+  border-right-width: ${({ theme })  => theme.sizes.borderSize};
+  border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
+`;
+
+export const TopRightCell = styled(Cell)`
+  ${sharedStyles};
+  border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
+`;
+
+export const LeftCell = styled(Cell)`
+  ${sharedStyles};
+  border-right-width: ${({ theme })  => theme.sizes.borderSize};
+  border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
+`;
+
+export const CenterCell = styled(Cell)`
+  ${sharedStyles};
+  border-right-width: ${({ theme })  => theme.sizes.borderSize};
+  border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
+`;
+
+export const RightCell = styled(Cell)`
+  ${sharedStyles};
+  border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
+`;
+
+export const BottomLeftCell = styled(Cell)`
+  ${sharedStyles};
+  border-right-width: ${({ theme })  => theme.sizes.borderSize};
+`;
+
+export const BottomCell = styled(Cell)`
+  ${sharedStyles};
+  border-right-width: ${({ theme })  => theme.sizes.borderSize};
+`;
+
+export const BottomRightCell = styled(Cell)`
+  ${sharedStyles};
 `;
