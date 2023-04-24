@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "hash-game",
-    "slug": "hash-game",
+    "name": "tic-tac-toe",
+    "slug": "tic-tac-toe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

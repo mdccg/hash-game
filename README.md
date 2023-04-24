@@ -1,8 +1,8 @@
-# hash-game
+# tic-tac-toe
 
 ## Sumário
 
-- [hash-game](#hash-game)
+- [tic-tac-toe](#tic-tac-toe)
   - [Sumário](#sumário)
   - [Motivação](#motivação)
   - [Pilha de tecnologia](#pilha-de-tecnologia)
