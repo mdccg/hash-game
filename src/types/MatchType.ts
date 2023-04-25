@@ -1,3 +1,5 @@
+import BoardType from './BoardType';
+
 type MatchResultType = 'X' | 'O' | 'Empate';
 
 type MatchType = {
@@ -6,7 +8,7 @@ type MatchType = {
    * TODO
    * Salvar o tabuleiro read-only
    */
-  board: unknown;
+  board: BoardType;
 }
 
 export default MatchType;

@@ -1,6 +1,6 @@
 import { CellWrapper } from './styles';
-import Cross from '../Cross';
-import Circle from '../Circle';
+import Cross from './../Cross';
+import Circle from './../Circle';
 import CellType from './../../types/CellType';
 import { StyleProp, ViewStyle } from 'react-native';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ type CellProps = {
   rowPosition: number;
   columnPosition: number;
   markCell: (x: number, y: number) => void;
+  disabled: boolean;
   cell?: CellType;
 }
 
@@ -18,9 +19,10 @@ const Cell = ({
   rowPosition,
   columnPosition,
   markCell,
+  disabled,
   cell,
 }: CellProps) => {
-  const [mark, setMark] = useState<string | undefined>('');
+  const [mark, setMark] = useState<string | undefined>();
 
   const handlePress = () => {
     markCell(rowPosition, columnPosition);
@@ -33,8 +35,14 @@ const Cell = ({
   }, [cell]);
 
   return (
-    <CellWrapper style={style} onPress={handlePress}>
-      {mark === 'X' ? <Cross /> : (mark === 'O' ? <Circle /> : null)}
+    <CellWrapper
+      underlayColor="transparent"
+      style={style}
+      disabled={disabled || mark !== undefined}
+      onPress={handlePress}>
+      <>
+        {mark === 'X' ? <Cross /> : (mark === 'O' ? <Circle /> : null)}
+      </>
     </CellWrapper>
   );
 }

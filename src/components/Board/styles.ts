@@ -1,64 +1,67 @@
 import styled, { css } from 'styled-components/native';
 import Cell from './../Cell';
+import { Dimensions } from 'react-native';
 
 export const BoardWrapper = styled.View`
   background-color: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
+  width: ${Dimensions.get('window').width}px;
+  align-items: center;
+  padding: 30px 0;
 `;
 
 export const Row = styled.View`
   flex-direction: row;
 `;
 
-const sharedStyles = css`
+const borderStyles = css`
   border-style: solid;
-  border-color: ${({ theme }) => theme.colors.border};
+  border-color: ${({ theme }) => theme.colors.boardBorder};
 `;
 
 export const TopLeftCell = styled(Cell)`
-  ${sharedStyles};
+  ${borderStyles};
   border-right-width: ${({ theme })  => theme.sizes.borderSize};
   border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
 `;
 
 export const TopCell = styled(Cell)`
-  ${sharedStyles};
+  ${borderStyles};
   border-right-width: ${({ theme })  => theme.sizes.borderSize};
   border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
 `;
 
 export const TopRightCell = styled(Cell)`
-  ${sharedStyles};
+  ${borderStyles};
   border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
 `;
 
 export const LeftCell = styled(Cell)`
-  ${sharedStyles};
+  ${borderStyles};
   border-right-width: ${({ theme })  => theme.sizes.borderSize};
   border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
 `;
 
 export const CenterCell = styled(Cell)`
-  ${sharedStyles};
+  ${borderStyles};
   border-right-width: ${({ theme })  => theme.sizes.borderSize};
   border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
 `;
 
 export const RightCell = styled(Cell)`
-  ${sharedStyles};
+  ${borderStyles};
   border-bottom-width: ${({ theme }) => theme.sizes.borderSize};
 `;
 
 export const BottomLeftCell = styled(Cell)`
-  ${sharedStyles};
+  ${borderStyles};
   border-right-width: ${({ theme })  => theme.sizes.borderSize};
 `;
 
 export const BottomCell = styled(Cell)`
-  ${sharedStyles};
+  ${borderStyles};
   border-right-width: ${({ theme })  => theme.sizes.borderSize};
 `;
 
 export const BottomRightCell = styled(Cell)`
-  ${sharedStyles};
+  ${borderStyles};
 `;

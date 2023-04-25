@@ -1,19 +1,19 @@
-import { Lato_400Regular } from '@expo-google-fonts/lato';
+import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback } from 'react';
 import { ThemeProvider } from 'styled-components';
-import Board from '../src/components/Board';
 import theme from './../src/styles/theme';
 import { AppWrapper } from './styles';
 import { View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import Main from './../src/screens/Main';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [fontsLoaded] = useFonts({ Lato_400Regular });
+  const [fontsLoaded] = useFonts({ Lato_400Regular, Lato_700Bold });
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -30,7 +30,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <StatusBar style="auto" />
         <View style={{ height: getStatusBarHeight() }} />
-        <Board />
+        <Main />
       </ThemeProvider>
     </AppWrapper>
   );
