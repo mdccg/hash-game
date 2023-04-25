@@ -8,6 +8,7 @@ import { useEffectDeps } from './../../utils/react_utils';
 import BoardType from './../../types/BoardType';
 import TilesetType from './../../types/TilesetType';
 import Board from './../../components/Board';
+import MarkType from '../../types/MarkType';
 
 const Main = () => {
   const [gameOption, setGameOption] = useState<GameOptionType>('Contra a Máquina');
@@ -50,15 +51,35 @@ const Main = () => {
 
     setIsFirstPlayerTurn(!isFirstPlayerTurn);
     setBoard(currentBoard);
+
+    const possibleWinner = getWinner();
+
+    if (possibleWinner !== null) {
+      alert(possibleWinner + ' ganhou!');
+      setResetFlag(!resetFlag);
+      return;
+    }
+
+    const unmarkedCells = getUnmarkedCells();
+    
+    if (unmarkedCells.length === 0) {
+      alert('Deu velha!');
+      setResetFlag(!resetFlag);
+    }
+  }
+
+  const getUnmarkedCells = (): CellType[] => {
+    let currentBoard = [...board];
+    const unmarkedCells = currentBoard.flat().filter((cell) => !cell.mark);
+    return unmarkedCells;
   }
 
   const fightBack = () => {
-    let currentBoard = [...board];
-
     switch(difficultyLevel) {
       case 'Fácil':
-        const unmarkedCells = currentBoard.flat().filter((cell) => !cell.mark);
         
+        const unmarkedCells = getUnmarkedCells();
+
         if (unmarkedCells.length === 0) {
           break;
         }
@@ -82,8 +103,47 @@ const Main = () => {
     }
   }
   
-  const detectWinner = () => {
-    
+  const getWinner = (): MarkType | null => {
+    const marks = ['X', 'O'];
+
+    for (const mark of marks) {
+      if (board[0][0].mark === mark && board[0][1].mark === mark && board[0][2].mark === mark ||
+        board[1][0].mark === mark && board[1][1].mark === mark && board[1][2].mark === mark ||
+        board[2][0].mark === mark && board[2][1].mark === mark && board[2][2].mark === mark ||
+        board[0][0].mark === mark && board[1][0].mark === mark && board[2][0].mark === mark ||
+        board[0][1].mark === mark && board[1][1].mark === mark && board[2][1].mark === mark ||
+        board[0][2].mark === mark && board[1][2].mark === mark && board[2][2].mark === mark) { // racha cuca
+        return mark as MarkType;
+      }
+
+      let checksum: number = 0;
+
+      // Diagonal principal
+      for (let i = 0; i < 3; ++i) {
+        if (board[i][i].mark === mark) {
+          ++checksum;
+        }
+      }
+  
+      if (checksum === 3) {
+        return mark as MarkType;
+      }
+  
+      checksum = 0;
+  
+      // Diagonal secundária
+      for (let i = 0; i < 3; ++i) {
+        if (board[i][2 - i].mark === mark) {
+          ++checksum;
+        }
+      }
+  
+      if (checksum === 3) {
+        return mark as MarkType;
+      }
+    }
+
+    return null;
   }
 
   useEffect(() => {

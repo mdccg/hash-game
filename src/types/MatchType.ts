@@ -1,6 +1,7 @@
 import BoardType from './BoardType';
+import MarkType from './MarkType';
 
-type MatchResultType = 'X' | 'O' | 'Empate';
+type MatchResultType = MarkType | 'Empate';
 
 type MatchType = {
   winner: MatchResultType;

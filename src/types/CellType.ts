@@ -1,7 +1,9 @@
+import MarkType from './MarkType';
+
 type CellType = {
   rowPosition: number;
   columnPosition: number;
-  mark?: 'X' | 'O';
+  mark?: MarkType;
 }
 
 export default CellType;
