@@ -14,7 +14,9 @@
 
 Este app consiste no jogo da velha para dispositivos móveis.
 
-<!-- Adicionar explicação das dificuldades aqui -->
+Com duas opções de jogo, "Dois jogadores" e "Contra a Máquina", o usuário pode escolher o modo que melhor se adequa às suas necessidades. No modo "Dois jogadores", você pode jogar contra um amigo ou membro da família em uma partida rápida ou longa, intercalando as jogadas até que um dos jogadores vença ou ocorra um empate. É possível reiniciar ou começar uma nova partida sempre que quiser. Já no modo "Contra a Máquina", o jogador irá testar suas habilidades de estratégia e raciocínio contra o computador. São três níveis de dificuldade: fácil, médio e difícil. No nível fácil, a máquina comete erros aleatórios, proporcionando uma partida mais simples e casual. O nível médio amplia a capacidade de raciocínio da máquina, tornando a partida mais desafiadora. E no nível difícil, a máquina utiliza algoritmos mais elaborados, exigindo do jogador maior habilidade e estratégia para vencer.
+
+O aplicativo também conta com uma interface amigável e intuitiva, permitindo ao usuário iniciar uma nova partida ou reiniciar a atual. As estatísticas das partidas anteriores são exibidas na tela principal, incluindo o número de vitórias, derrotas e empates. Essas informações não são salvas, mas apenas referentes às partidas realizadas enquanto o aplicativo estiver aberto. Foram utilizadas técnicas de programação aprendidas em sala, garantindo a estabilidade e funcionalidade do aplicativo em diferentes tipos de dispositivos móveis.
 
 Este foi o terceiro repositório de código apresentado no [Curso Superior de TSI](https://www.ifms.edu.br/campi/campus-aquidauana/cursos/graduacao/sistemas-para-internet/sistemas-para-internet) do IFMS como requisito para obtenção da nota parcial das atividades da unidade curricular Programação para Dispositivos Móveis I.
 
