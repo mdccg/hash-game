@@ -3,12 +3,12 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback } from 'react';
-import { ThemeProvider } from 'styled-components';
-import theme from './../src/styles/theme';
-import { AppWrapper } from './styles';
 import { View } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { ThemeProvider } from 'styled-components';
 import Main from './../src/screens/Main';
+import theme from './../src/styles/theme';
+import { AppWrapper } from './styles';
 
 SplashScreen.preventAutoHideAsync();
 

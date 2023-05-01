@@ -4,11 +4,20 @@
 
 - [tic-tac-toe](#tic-tac-toe)
   - [Sumário](#sumário)
+  - [_To-do list_](#to-do-list)
   - [Motivação](#motivação)
   - [Pilha de tecnologia](#pilha-de-tecnologia)
   - [Como rodar](#como-rodar)
     - [Pré-requisitos](#pré-requisitos)
     - [Passo a passo](#passo-a-passo)
+
+## _To-do list_
+
+- Destacar a combinação vencedora antes de resetar o tabuleiro
+- Seletor de textura
+- Seletor de dificuldade
+- Tela do histórico
+- Substituir o `alert` por uma mensagem mais robusta
 
 ## Motivação
 
@@ -31,6 +40,8 @@ Este foi o terceiro repositório de código apresentado no [Curso Superior de TS
 | Plataforma | [Expo](https://expo.dev/) | 
 | Linguagem de programação | [JavaScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript) |
 | Front-end | [React Native](https://reactnative.dev/) |
+
+Os créditos pelas mídias disponibilizadas estão disponíveis [aqui](./assets/README.md).
 
 <!-- Adicionar galeria aqui -->
 

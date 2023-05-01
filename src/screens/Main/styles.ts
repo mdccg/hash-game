@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 
-export const AppWrapper = styled.View`
+export const MainWrapper = styled.View`
   background-color: 'white';
   flex-direction: column;
 `;

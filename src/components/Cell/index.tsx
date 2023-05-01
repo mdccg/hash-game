@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import CellType from './../../types/CellType';
 import TilesetType from './../../types/TilesetType';
-import CircleIcon from './../CircleIcon';
-import CrossIcon from './../CrossIcon';
 import { CellWrapper } from './styles';
+import { getIconComponent } from './../../utils/react_utils';
+import MatchResultType from './../../types/MatchResultType';
 
 type CellProps = {
   style?: StyleProp<ViewStyle>;
@@ -25,8 +25,9 @@ const Cell = ({
   cell,
   tileset,
 }: CellProps) => {
-  const [mark, setMark] = useState<string | undefined>();
+  const [mark, setMark] = useState<MatchResultType | undefined>();
   const [size] = useState<number>(64);
+  const IconComponent = getIconComponent(mark);
 
   const handlePress = () => {
     markCell(rowPosition, columnPosition);
@@ -45,7 +46,7 @@ const Cell = ({
       disabled={disabled || mark !== undefined}
       onPress={handlePress}>
       <>
-        {mark === 'X' ? <CrossIcon size={size} tileset={tileset} /> : (mark === 'O' ? <CircleIcon size={size} tileset={tileset} /> : null)}
+        {mark && <IconComponent size={size} tileset={tileset} />}
       </>
     </CellWrapper>
   );

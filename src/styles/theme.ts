@@ -1,7 +1,7 @@
 const theme = {
   colors: {
-    background: '#14bdac',
-    boardBorder: '#0CA192',
+    background: 'hsl(174, 81%, 41%)',
+    boardBorder: 'hsl(174, 81%, 37%)',
     border: '#b2bec3',
     text: '#70757a'
   },

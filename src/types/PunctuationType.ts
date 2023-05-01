@@ -1,7 +1,7 @@
 import MatchResultType from './MatchResultType';
 
 type PunctuationType = {
-  player: MatchResultType;
+  matchResult: MatchResultType;
   score: number;
 }
 

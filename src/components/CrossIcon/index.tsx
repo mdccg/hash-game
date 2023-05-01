@@ -1,9 +1,9 @@
 import { Image } from 'react-native';
-import MinecraftSword from './../../../assets/minecraft-sword.png';
 import IconProps from './../../types/IconProps';
+import { getSource } from './../../utils/tileset_utils';
 
 const CrossIcon = ({ size, tileset }: IconProps) => (
-  <Image source={MinecraftSword} alt="X" style={{
+  <Image source={getSource('X', tileset)} alt="X" style={{
     width: size,
     height: size,
   }} />

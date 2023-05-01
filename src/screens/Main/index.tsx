@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
-import DifficultyLevelType from './../../types/DifficultyLevelType';
-import MatchType from './../../types/MatchType';
-import GameOptionType from './../../types/GameOptionType';
-import { AppWrapper, RestartButton, RestartButtonText } from './styles';
-import CellType from './../../types/CellType';
-import { useEffectDeps } from './../../utils/react_utils';
-import BoardType from './../../types/BoardType';
-import TilesetType from './../../types/TilesetType';
 import Board from './../../components/Board';
-import MarkType from './../../types/MarkType';
 import Scoreboard from './../../components/Scoreboard';
+import BoardType from './../../types/BoardType';
+import CellType from './../../types/CellType';
+import DifficultyLevelType from './../../types/DifficultyLevelType';
+import GameOptionType from './../../types/GameOptionType';
+import MarkType from './../../types/MarkType';
+import MatchResultType from './../../types/MatchResultType';
+import MatchType from './../../types/MatchType';
 import PunctuationType from './../../types/PunctuationType';
-import MatchResultType from '../../types/MatchResultType';
+import TilesetType from './../../types/TilesetType';
+import { useEffectDeps } from './../../utils/react_utils';
+import { MainWrapper, RestartButton, RestartButtonText } from './styles';
 
 const Main = () => {
   const [gameOption, setGameOption] = useState<GameOptionType>('Contra a Máquina');
@@ -19,15 +19,15 @@ const Main = () => {
   const [isFirstPlayerTurn, setIsFirstPlayerTurn] = useState<boolean>(true);
   const [punctuations, setPuctuations] = useState<PunctuationType[]>([
     {
-      player: 'X',
+      matchResult: 'X',
       score: 0
     },
     {
-      player: 'O',
+      matchResult: 'O',
       score: 0
     },
     {
-      player: 'Empate',
+      matchResult: 'Velha',
       score: 0
     },
   ]);
@@ -36,6 +36,8 @@ const Main = () => {
   const [hasBeenInitialized, setHasBeenInitialized] = useState<boolean>(false);
   const [tileset, setTileset] = useState<TilesetType>('Minecraft');
   const [resetFlag, setResetFlag] = useState<boolean>(false);
+  const [hasBeenTotallyReseted, setHasBeenTotallyReseted] = useState<boolean>(false);
+  const [fightBackTimeout, setFightBackTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const initializeBoard = () => {
     let currentBoard: BoardType = [];
@@ -51,6 +53,8 @@ const Main = () => {
     setIsFirstPlayerTurn(true);
     setBoard(currentBoard);
     setHasBeenInitialized(true);
+    setHasBeenTotallyReseted(true);
+    clearTimeout(fightBackTimeout);
   }
 
   const markCell = (rowPosition: number, columnPosition: number) => {
@@ -66,11 +70,16 @@ const Main = () => {
     setIsFirstPlayerTurn(!isFirstPlayerTurn);
     setBoard(currentBoard);
 
-    const possibleWinner = getWinner(3);
+    const possibleWinner = identifyVictoryPattern(3);
 
     if (possibleWinner !== null) {
-      alert(possibleWinner !== 'Empate' ? `${possibleWinner} ganhou!` : 'Deu velha!');
+      savePunctuation(possibleWinner);
+      saveMatch(possibleWinner, currentBoard);
+
+      alert(possibleWinner !== 'Velha' ? `${possibleWinner} ganhou!` : 'Deu velha!');
+      
       reset();
+      setHasBeenTotallyReseted(false);
     }
   }
 
@@ -83,15 +92,9 @@ const Main = () => {
   const fightBack = () => {
     switch(difficultyLevel) {
       case 'Fácil':
-        
         const unmarkedCells = getUnmarkedCells();
-
-        if (unmarkedCells.length === 0) {
-          break;
-        }
-
         const randomIndex = Math.floor(Math.random() * unmarkedCells.length);
-        const randomCell = unmarkedCells[randomIndex];
+        const randomCell = unmarkedCells[randomIndex]; // Marca aleatoriamente
         const { rowPosition, columnPosition } = randomCell;
         markCell(rowPosition, columnPosition);
         break;
@@ -122,9 +125,15 @@ const Main = () => {
    * Voltar com os laços de repetição para viabilizar o uso
    * do atributo `times`
    */
-  const getWinner = (times: number): MatchResultType | null => {
+  const identifyVictoryPattern = (times: number): MatchResultType | null => {
     const marks: MarkType[] = ['X', 'O'];
   
+    /*
+     * [00][01][02]
+     * [10][11][12]
+     * [20][21][22]
+     */
+
     for (const mark of marks) {
       // Remover essa feiura aqui
       if (board[0][0].mark === mark && board[0][1].mark === mark && board[0][2].mark === mark ||
@@ -166,7 +175,7 @@ const Main = () => {
     const unmarkedCells = getUnmarkedCells();
     
     if (unmarkedCells.length === 0) {
-      return 'Empate';
+      return 'Velha';
     }
 
     return null;
@@ -174,20 +183,40 @@ const Main = () => {
 
   const reset = () => setResetFlag(!resetFlag);
 
+  const savePunctuation = (winner: MatchResultType) => {
+    let currentPunctuations = [...punctuations];
+    let winnerPunctuation = currentPunctuations.find(({ matchResult }) => matchResult === winner);
+    ++winnerPunctuation.score;
+    setPuctuations(currentPunctuations);
+  }
+
+  const saveMatch = (winner: MatchResultType, board: BoardType) => {
+    let currentPreviousMatches = [...previousMatches];
+    let currentMatch: MatchType = { winner, board };
+    currentPreviousMatches.push(currentMatch);
+    setPreviousMatches(currentPreviousMatches);
+  }
+  
   useEffect(() => {
     initializeBoard();
   }, [resetFlag]);
 
-  // Contra a Máquina
   useEffectDeps(() => {
-    if (!isFirstPlayerTurn && gameOption === 'Contra a Máquina') {
-      fightBack();
+    if (hasBeenTotallyReseted && !isFirstPlayerTurn && gameOption === 'Contra a Máquina') {
+      setFightBackTimeout(
+        setTimeout(() => {
+          fightBack();
+        }, 1e3)
+      );
     }
   }, [isFirstPlayerTurn]);
 
   return (
-    <AppWrapper>
-      <Scoreboard tileset={tileset} punctuations={punctuations} />
+    <MainWrapper>
+      <Scoreboard
+        tileset={tileset}
+        punctuations={punctuations}
+        isFirstPlayerTurn={isFirstPlayerTurn} />
 
       <Board
         hasBeenInitialized={hasBeenInitialized}
@@ -197,9 +226,9 @@ const Main = () => {
         tileset={tileset} />
       
       <RestartButton onPress={reset}>
-        <RestartButtonText>Reiniciar Jogo</RestartButtonText>
+        <RestartButtonText>Reiniciar jogo</RestartButtonText>
       </RestartButton>
-    </AppWrapper>
+    </MainWrapper>
   );
 }
 
