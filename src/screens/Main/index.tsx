@@ -12,6 +12,10 @@ import PunctuationType from './../../types/PunctuationType';
 import TilesetType from './../../types/TilesetType';
 import { useEffectDeps } from './../../utils/react_utils';
 import { MainWrapper, RestartButton, RestartButtonText } from './styles';
+import DifficultyLevelPicker from '../../components/DifficultyLevelPicker';
+import PickerOptionType from '../../types/PickerOptionType';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 const Main = () => {
   const [gameOption, setGameOption] = useState<GameOptionType>('Contra a Máquina');
@@ -38,6 +42,35 @@ const Main = () => {
   const [resetFlag, setResetFlag] = useState<boolean>(false);
   const [hasBeenTotallyReseted, setHasBeenTotallyReseted] = useState<boolean>(false);
   const [fightBackTimeout, setFightBackTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [difficultyLevelPickerOptions, setDifficultyLevelPickerOptions] = useState<PickerOptionType[]>([
+    {
+      optionLabel: 'Fácil',
+      handlePress: () => {
+        setGameOption('Contra a Máquina');
+        setDifficultyLevel('Fácil');
+      }
+    },
+    {
+      optionLabel: 'Médio',
+      handlePress: () => {
+        setGameOption('Contra a Máquina');
+        setDifficultyLevel('Médio');
+      }
+    },
+    {
+      optionLabel: 'Impossível',
+      handlePress: () => {
+        setGameOption('Contra a Máquina');
+        setDifficultyLevel('Impossível');
+      }
+    },
+    {
+      optionLabel: 'Jogar contra um amigo',
+      handlePress: () => {
+        setGameOption('Dois jogadores');
+      }
+    }
+  ]);
 
   const initializeBoard = () => {
     let currentBoard: BoardType = [];
@@ -78,8 +111,8 @@ const Main = () => {
 
       alert(possibleWinner !== 'Velha' ? `${possibleWinner} ganhou!` : 'Deu velha!');
       
-      reset();
       setHasBeenTotallyReseted(false);
+      reset();
     }
   }
 
@@ -107,7 +140,7 @@ const Main = () => {
          */
         break;
 
-      case 'Difícil':
+      case 'Impossível':
         /**
          * TODO
          * Fazer a mesma coisa com o médio mas ter preferência
@@ -197,6 +230,14 @@ const Main = () => {
     setPreviousMatches(currentPreviousMatches);
   }
   
+  const getDefaultDifficultyLevelPickerOption = (): PickerOptionType => {
+    if (gameOption === 'Dois jogadores') {
+      return difficultyLevelPickerOptions.at(3);
+    } else {
+      return difficultyLevelPickerOptions.find(({ optionLabel }) => optionLabel === difficultyLevel);
+    }
+  }
+
   useEffect(() => {
     initializeBoard();
   }, [resetFlag]);
@@ -213,21 +254,31 @@ const Main = () => {
 
   return (
     <MainWrapper>
+      <Header>
+        <DifficultyLevelPicker
+          defaultOption={getDefaultDifficultyLevelPickerOption()}
+          options={difficultyLevelPickerOptions}
+          finallyTreatment={reset} />
+      </Header>
+
       <Scoreboard
         tileset={tileset}
         punctuations={punctuations}
         isFirstPlayerTurn={isFirstPlayerTurn} />
 
       <Board
-        hasBeenInitialized={hasBeenInitialized}
-        isFirstPlayerTurn={isFirstPlayerTurn}
         board={board}
-        markCell={markCell}
-        tileset={tileset} />
+        tileset={tileset}
+        gameOption={gameOption}
+        isFirstPlayerTurn={isFirstPlayerTurn}
+        hasBeenInitialized={hasBeenInitialized}
+        markCell={markCell} />
       
       <RestartButton onPress={reset}>
         <RestartButtonText>Reiniciar jogo</RestartButtonText>
       </RestartButton>
+
+      <Footer></Footer>
     </MainWrapper>
   );
 }

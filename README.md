@@ -13,11 +13,14 @@
 
 ## _To-do list_
 
+- ~~Seletor de dificuldade~~
 - Destacar a combinação vencedora antes de resetar o tabuleiro
 - Seletor de textura
-- Seletor de dificuldade
 - Tela do histórico
 - Substituir o `alert` por uma mensagem mais robusta
+- Adicionar _tileset_ do Leandro
+- Adicionar uma _hitbox_ para o hífen na pontuação
+- Adicionar o tamanho dos ícones no arquivo `theme.ts`
 
 ## Motivação
 

@@ -9,6 +9,7 @@ import { ThemeProvider } from 'styled-components';
 import Main from './../src/screens/Main';
 import theme from './../src/styles/theme';
 import { AppWrapper } from './styles';
+import { Provider as PaperProvider } from 'react-native-paper';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,12 +27,14 @@ export default function App() {
   }
 
   return (
-    <AppWrapper onLayout={onLayoutRootView}>
-      <ThemeProvider theme={theme}>
-        <StatusBar style="auto" />
-        <View style={{ height: getStatusBarHeight() }} />
-        <Main />
-      </ThemeProvider>
-    </AppWrapper>
+    <PaperProvider>
+      <AppWrapper onLayout={onLayoutRootView}>
+        <ThemeProvider theme={theme}>
+          <StatusBar style="auto" />
+          <View style={{ height: getStatusBarHeight() }} />
+          <Main />
+        </ThemeProvider>
+      </AppWrapper>
+    </PaperProvider>
   );
 }
