@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Menu } from 'react-native-paper';
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import theme from '../../styles/theme';
-import PickerOptionType from '../../types/PickerOptionType';
-import { PickerWrapper, PickerLabel } from './styles';
 import { StyleSheet } from 'react-native';
+import { Menu } from 'react-native-paper';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import theme from './../../styles/theme';
+import PickerOptionType from './../../types/PickerOptionType';
+import { PickerLabel, PickerWrapper } from './styles';
 
 type DifficultyLevelPickerProps = {
   label?: string;
@@ -16,10 +16,14 @@ type DifficultyLevelPickerProps = {
 
 const Picker = ({ label, defaultOption, options, finallyTreatment }: DifficultyLevelPickerProps) => {
   const [selectedOption, setSelectedOption] = useState<PickerOptionType | null>(defaultOption || null);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isMenuOpen, setIsOpen] = useState<boolean>(false);
 
-  const handlePress = () => {
-    setIsOpen(!isOpen);
+  const openMenu = () => {
+    setIsOpen(true);
+  }
+
+  const closeMenu = () => {
+    setIsOpen(false);
   }
 
   if (!label && !defaultOption) {
@@ -29,9 +33,9 @@ const Picker = ({ label, defaultOption, options, finallyTreatment }: DifficultyL
   return (
     <Menu
       anchor={(
-        <PickerWrapper onPress={handlePress}>
+        <PickerWrapper onPress={openMenu}>
           <FontAwesomeIcon
-            name={isOpen ? 'caret-up' : 'caret-down'}
+            name={isMenuOpen ? 'caret-up' : 'caret-down'}
             size={16}
             color={theme.colors.text} />
             
@@ -40,8 +44,8 @@ const Picker = ({ label, defaultOption, options, finallyTreatment }: DifficultyL
           {selectedOption && <PickerLabel>{selectedOption.optionLabel}</PickerLabel>}
         </PickerWrapper>
       )}
-      visible={isOpen}
-      onDismiss={() => setIsOpen(false)}
+      visible={isMenuOpen}
+      onDismiss={closeMenu}
       contentStyle={styles.menuContentStyle}>
       {options.map(({ optionLabel, handlePress, customIcon: CustomIcon }) => {
         const isSelected = optionLabel === selectedOption.optionLabel;
@@ -56,7 +60,7 @@ const Picker = ({ label, defaultOption, options, finallyTreatment }: DifficultyL
               if (finallyTreatment) {
                 finallyTreatment();
               }
-              setIsOpen(false);
+              closeMenu();
               setSelectedOption({ optionLabel, handlePress });
             }}
             style={styles.menuItemStyle}

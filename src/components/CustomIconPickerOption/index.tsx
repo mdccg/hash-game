@@ -1,6 +1,6 @@
-import TilesetType from '../../types/TilesetType';
-import CircleIcon from '../CircleIcon';
-import CrossIcon from '../CrossIcon';
+import TilesetType from './../../types/TilesetType';
+import CircleIcon from './../CircleIcon';
+import CrossIcon from './../CrossIcon';
 import { CustomIconWrapper, CustomIconWrapperGap } from './styles';
 
 type CustomIconPickerOptionProps = {

@@ -1,7 +1,7 @@
-import TilesetType from './../../types/TilesetType';
 import BoardType from './../../types/BoardType';
+import GameOptionType from './../../types/GameOptionType';
+import TilesetType from './../../types/TilesetType';
 import { BoardWrapper, BottomCell, BottomLeftCell, BottomRightCell, CenterCell, LeftCell, RightCell, Row, TopCell, TopLeftCell, TopRightCell } from './styles';
-import GameOptionType from '../../types/GameOptionType';
 
 type BoardProps = {
   board: BoardType;

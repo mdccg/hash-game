@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import Board from './../../components/Board';
+import CustomIconPickerOption from './../../components/CustomIconPickerOption';
+import Footer from './../../components/Footer';
+import Header from './../../components/Header';
+import Picker from './../../components/Picker';
 import Scoreboard from './../../components/Scoreboard';
 import BoardType from './../../types/BoardType';
 import CellType from './../../types/CellType';
@@ -8,37 +12,34 @@ import GameOptionType from './../../types/GameOptionType';
 import MarkType from './../../types/MarkType';
 import MatchResultType from './../../types/MatchResultType';
 import MatchType from './../../types/MatchType';
+import PickerOptionType from './../../types/PickerOptionType';
 import PunctuationType from './../../types/PunctuationType';
 import TilesetType from './../../types/TilesetType';
 import { useEffectDeps } from './../../utils/react_utils';
 import { MainWrapper, RestartButton, RestartButtonText } from './styles';
-import Picker from '../../components/Picker';
-import PickerOptionType from '../../types/PickerOptionType';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import CrossIcon from '../../components/CrossIcon';
-import { getSource } from '../../utils/tileset_utils';
-import CircleIcon from '../../components/CircleIcon';
-import CustomIconPickerOption from '../../components/CustomIconPickerOption';
 
 const Main = () => {
+  const getInitialPunctuationsValue = (): PunctuationType[] => (
+    [
+      {
+        matchResult: 'X',
+        score: 0
+      },
+      {
+        matchResult: 'O',
+        score: 0
+      },
+      {
+        matchResult: 'Velha',
+        score: 0
+      },
+    ]
+  );
+
   const [gameOption, setGameOption] = useState<GameOptionType>('Contra a Máquina');
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevelType>('Fácil');
   const [isFirstPlayerTurn, setIsFirstPlayerTurn] = useState<boolean>(true);
-  const [punctuations, setPuctuations] = useState<PunctuationType[]>([
-    {
-      matchResult: 'X',
-      score: 0
-    },
-    {
-      matchResult: 'O',
-      score: 0
-    },
-    {
-      matchResult: 'Velha',
-      score: 0
-    },
-  ]);
+  const [punctuations, setPuctuations] = useState<PunctuationType[]>(getInitialPunctuationsValue());
   const [previousMatches, setPreviousMatches] = useState<MatchType[]>([]);
   const [board, setBoard] = useState<BoardType>([]);
   const [hasBeenInitialized, setHasBeenInitialized] = useState<boolean>(false);
@@ -81,14 +82,14 @@ const Main = () => {
       handlePress: () => {
         setTileset('Padrão');
       },
-      customIcon: (props) => <CustomIconPickerOption tileset="Padrão" {...props} />
+      customIcon: (_) => <CustomIconPickerOption tileset="Padrão" />
     },
     {
       optionLabel: 'Minecraft',
       handlePress: () => {
         setTileset('Minecraft');
       },
-      customIcon: (props) => <CustomIconPickerOption tileset="Minecraft" {...props} />
+      customIcon: (_) => <CustomIconPickerOption tileset="Minecraft" />
     },
   ]);
 
@@ -123,12 +124,16 @@ const Main = () => {
     setIsFirstPlayerTurn(!isFirstPlayerTurn);
     setBoard(currentBoard);
 
-    const possibleWinner = identifyVictoryPattern(3);
+    const possibleWinner = getWinner();
 
     if (possibleWinner !== null) {
       savePunctuation(possibleWinner);
       saveMatch(possibleWinner, currentBoard);
 
+      /**
+       * TODO
+       * Trocar isso por um VictoryPanel
+       */
       alert(possibleWinner !== 'Velha' ? `${possibleWinner} ganhou!` : 'Deu velha!');
       
       setHasBeenTotallyReseted(false);
@@ -173,54 +178,20 @@ const Main = () => {
     }
   }
   
-  /**
-   * FIXME
-   * Voltar com os laços de repetição para viabilizar o uso
-   * do atributo `times`
-   */
-  const identifyVictoryPattern = (times: number): MatchResultType | null => {
+  const getWinner = (): MatchResultType | null => {
     const marks: MarkType[] = ['X', 'O'];
-  
-    /*
-     * [00][01][02]
-     * [10][11][12]
-     * [20][21][22]
-     */
 
     for (const mark of marks) {
-      // Remover essa feiura aqui
-      if (board[0][0].mark === mark && board[0][1].mark === mark && board[0][2].mark === mark ||
+      if (
+        board[0][0].mark === mark && board[0][1].mark === mark && board[0][2].mark === mark ||
         board[1][0].mark === mark && board[1][1].mark === mark && board[1][2].mark === mark ||
         board[2][0].mark === mark && board[2][1].mark === mark && board[2][2].mark === mark ||
         board[0][0].mark === mark && board[1][0].mark === mark && board[2][0].mark === mark ||
         board[0][1].mark === mark && board[1][1].mark === mark && board[2][1].mark === mark ||
-        board[0][2].mark === mark && board[1][2].mark === mark && board[2][2].mark === mark) { // racha cuca
-        return mark;
-      }
-
-      let checksum: number = 0;
-
-      // Diagonal principal
-      for (let i = 0; i < times; ++i) {
-        if (board[i][i].mark === mark) {
-          ++checksum;
-        }
-      }
-  
-      if (checksum === times) {
-        return mark;
-      }
-  
-      checksum = 0;
-  
-      // Diagonal secundária
-      for (let i = 0; i < times; ++i) {
-        if (board[i][2 - i].mark === mark) {
-          ++checksum;
-        }
-      }
-  
-      if (checksum === times) {
+        board[0][2].mark === mark && board[1][2].mark === mark && board[2][2].mark === mark ||
+        board[0][0].mark === mark && board[1][1].mark === mark && board[2][2].mark === mark ||
+        board[0][2].mark === mark && board[1][1].mark === mark && board[2][0].mark === mark
+        ) {
         return mark;
       }
     }
@@ -230,6 +201,20 @@ const Main = () => {
     if (unmarkedCells.length === 0) {
       return 'Velha';
     }
+
+    return null;
+  }
+
+  /**
+   * TODO
+   * Usar laços de repetição
+   */
+  const searchByVictoryPattern = (): CellType | null => {
+    /*
+     * [00][01][02]
+     * [10][11][12]
+     * [20][21][22]
+     */
 
     return null;
   }
@@ -245,7 +230,7 @@ const Main = () => {
 
   const saveMatch = (winner: MatchResultType, board: BoardType) => {
     let currentPreviousMatches = [...previousMatches];
-    let currentMatch: MatchType = { winner, board };
+    let currentMatch: MatchType = { winner, gameOption, difficultyLevel, board };
     currentPreviousMatches.push(currentMatch);
     setPreviousMatches(currentPreviousMatches);
   }
@@ -262,21 +247,9 @@ const Main = () => {
     tilesetPickerOptions.find(({ optionLabel }) => optionLabel === tileset)
   );
 
-  const resetPunctuation = () => {
-    setPuctuations([
-      {
-        matchResult: 'X',
-        score: 0
-      },
-      {
-        matchResult: 'O',
-        score: 0
-      },
-      {
-        matchResult: 'Velha',
-        score: 0
-      },
-    ]);
+  const resetPunctuations = () => {
+    let newPunctuations = getInitialPunctuationsValue();
+    setPuctuations(newPunctuations);
   }
 
   useEffect(() => {
@@ -300,7 +273,7 @@ const Main = () => {
           defaultOption={getDefaultDifficultyLevelPickerOption()}
           options={difficultyLevelPickerOptions}
           finallyTreatment={() => {
-            resetPunctuation();
+            resetPunctuations();
             resetBoard();
           }} />
       </Header>
