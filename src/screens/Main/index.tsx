@@ -12,10 +12,14 @@ import PunctuationType from './../../types/PunctuationType';
 import TilesetType from './../../types/TilesetType';
 import { useEffectDeps } from './../../utils/react_utils';
 import { MainWrapper, RestartButton, RestartButtonText } from './styles';
-import DifficultyLevelPicker from '../../components/DifficultyLevelPicker';
+import Picker from '../../components/Picker';
 import PickerOptionType from '../../types/PickerOptionType';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import CrossIcon from '../../components/CrossIcon';
+import { getSource } from '../../utils/tileset_utils';
+import CircleIcon from '../../components/CircleIcon';
+import CustomIconPickerOption from '../../components/CustomIconPickerOption';
 
 const Main = () => {
   const [gameOption, setGameOption] = useState<GameOptionType>('Contra a Máquina');
@@ -42,7 +46,7 @@ const Main = () => {
   const [resetFlag, setResetFlag] = useState<boolean>(false);
   const [hasBeenTotallyReseted, setHasBeenTotallyReseted] = useState<boolean>(false);
   const [fightBackTimeout, setFightBackTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [difficultyLevelPickerOptions, setDifficultyLevelPickerOptions] = useState<PickerOptionType[]>([
+  const [difficultyLevelPickerOptions] = useState<PickerOptionType[]>([
     {
       optionLabel: 'Fácil',
       handlePress: () => {
@@ -70,6 +74,22 @@ const Main = () => {
         setGameOption('Dois jogadores');
       }
     }
+  ]);
+  const [tilesetPickerOptions] = useState<PickerOptionType[]>([
+    {
+      optionLabel: 'Padrão',
+      handlePress: () => {
+        setTileset('Padrão');
+      },
+      customIcon: (props) => <CustomIconPickerOption tileset="Padrão" {...props} />
+    },
+    {
+      optionLabel: 'Minecraft',
+      handlePress: () => {
+        setTileset('Minecraft');
+      },
+      customIcon: (props) => <CustomIconPickerOption tileset="Minecraft" {...props} />
+    },
   ]);
 
   const initializeBoard = () => {
@@ -112,7 +132,7 @@ const Main = () => {
       alert(possibleWinner !== 'Velha' ? `${possibleWinner} ganhou!` : 'Deu velha!');
       
       setHasBeenTotallyReseted(false);
-      reset();
+      resetBoard();
     }
   }
 
@@ -214,7 +234,7 @@ const Main = () => {
     return null;
   }
 
-  const reset = () => setResetFlag(!resetFlag);
+  const resetBoard = () => setResetFlag(!resetFlag);
 
   const savePunctuation = (winner: MatchResultType) => {
     let currentPunctuations = [...punctuations];
@@ -238,6 +258,27 @@ const Main = () => {
     }
   }
 
+  const getDefaultTilesetPickerOption = (): PickerOptionType => (
+    tilesetPickerOptions.find(({ optionLabel }) => optionLabel === tileset)
+  );
+
+  const resetPunctuation = () => {
+    setPuctuations([
+      {
+        matchResult: 'X',
+        score: 0
+      },
+      {
+        matchResult: 'O',
+        score: 0
+      },
+      {
+        matchResult: 'Velha',
+        score: 0
+      },
+    ]);
+  }
+
   useEffect(() => {
     initializeBoard();
   }, [resetFlag]);
@@ -255,10 +296,13 @@ const Main = () => {
   return (
     <MainWrapper>
       <Header>
-        <DifficultyLevelPicker
+        <Picker
           defaultOption={getDefaultDifficultyLevelPickerOption()}
           options={difficultyLevelPickerOptions}
-          finallyTreatment={reset} />
+          finallyTreatment={() => {
+            resetPunctuation();
+            resetBoard();
+          }} />
       </Header>
 
       <Scoreboard
@@ -274,11 +318,15 @@ const Main = () => {
         hasBeenInitialized={hasBeenInitialized}
         markCell={markCell} />
       
-      <RestartButton onPress={reset}>
+      <RestartButton onPress={resetBoard}>
         <RestartButtonText>Reiniciar jogo</RestartButtonText>
       </RestartButton>
 
-      <Footer></Footer>
+      <Footer>
+        <Picker
+          defaultOption={getDefaultTilesetPickerOption()}
+          options={tilesetPickerOptions} />
+      </Footer>
     </MainWrapper>
   );
 }

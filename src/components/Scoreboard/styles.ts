@@ -22,6 +22,15 @@ export const PunctuationWrapper = styled.View`
   border-bottom-width: 4px;
 `;
 
+export const ScoreNumberArea = styled.View`
+  justify-content: center;
+  align-items: center;
+  width:  16px;
+  height: 16px;
+  margin-left: 16px;
+`;
+
 export const ScoreNumber = styled.Text`
-  margin-left: 32px;
+  font-family: ${({ theme }) => theme.fonts.regular};
+  color: ${({ theme }) => theme.colors.text};
 `;

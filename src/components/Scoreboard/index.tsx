@@ -1,7 +1,7 @@
 import { StyleProp, ViewStyle } from 'react-native';
 import PunctuationType from './../../types/PunctuationType';
 import TilesetType from './../../types/TilesetType';
-import { PunctuationWrapper, ScoardboardWrapper, ScoreNumber } from './styles';
+import { PunctuationWrapper, ScoardboardWrapper, ScoreNumber, ScoreNumberArea } from './styles';
 import { getIconComponent } from './../../utils/react_utils';
 import MatchResultType from './../../types/MatchResultType';
 import theme from './../../styles/theme';
@@ -34,7 +34,9 @@ const PunctuationComponent = ({
   return (
     <PunctuationWrapper style={[style, { borderBottomColor: customBorderBottomColor }]}>
       <IconComponent size={16} tileset={tileset} />
-      <ScoreNumber>{score === 0 ? '-' : score}</ScoreNumber>
+      <ScoreNumberArea>
+        <ScoreNumber>{score === 0 ? '-' : score}</ScoreNumber>
+      </ScoreNumberArea>
     </PunctuationWrapper>
   );
 }

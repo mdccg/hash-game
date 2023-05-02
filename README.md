@@ -14,13 +14,13 @@
 ## _To-do list_
 
 - ~~Seletor de dificuldade~~
+- ~~Seletor de textura~~
+- ~~Adicionar uma _hitbox_ para o hífen na pontuação~~
 - Destacar a combinação vencedora antes de resetar o tabuleiro
-- Seletor de textura
 - Tela do histórico
 - Substituir o `alert` por uma mensagem mais robusta
 - Adicionar _tileset_ do Leandro
-- Adicionar uma _hitbox_ para o hífen na pontuação
-- Adicionar o tamanho dos ícones no arquivo `theme.ts`
+- Adicionar o tamanho de todos os ícones no arquivo `theme.ts`
 
 ## Motivação
 
@@ -41,7 +41,7 @@ Este foi o terceiro repositório de código apresentado no [Curso Superior de TS
 |-|-|
 | Ambiente de execução | [Node](https://nodejs.org/en/) |
 | Plataforma | [Expo](https://expo.dev/) | 
-| Linguagem de programação | [JavaScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript) |
+| Linguagem de programação | [TypeScript](https://www.typescriptlang.org/) |
 | Front-end | [React Native](https://reactnative.dev/) |
 
 Os créditos pelas mídias disponibilizadas estão disponíveis [aqui](./assets/README.md).
