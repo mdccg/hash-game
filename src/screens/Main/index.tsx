@@ -14,13 +14,14 @@ import MatchResultType from './../../types/MatchResultType';
 import MatchType from './../../types/MatchType';
 import PickerOptionType from './../../types/PickerOptionType';
 import PunctuationType from './../../types/PunctuationType';
+import SequenceType from './../../types/SequenceType';
 import TilesetType from './../../types/TilesetType';
 import { useEffectDeps } from './../../utils/react_utils';
 import { MainWrapper, RestartButton, RestartButtonText } from './styles';
 
 type WinnerStatisticsType = {
   matchResult: MatchResultType;
-  winnerSequence?: CellType[];
+  winnerSequence?: SequenceType;
 }
 
 const Main = () => {
@@ -131,7 +132,7 @@ const Main = () => {
     setIsFirstPlayerTurn(!isFirstPlayerTurn);
     setBoard(currentBoard);
 
-    const possibleWinner = getWinnerStatistics(3);
+    const possibleWinner = getWinnerStatistics();
     
     if (possibleWinner !== null) {
       /**
@@ -168,7 +169,7 @@ const Main = () => {
     return unmarkedCells;
   }
 
-  const finishWinnerSequence = (sequenceMark: MarkType, finishingMark: MarkType): boolean => {
+  const finishWinnerSequence = (sequenceMark: MarkType, finishingMark: MarkType = 'O'): boolean => {
     const possibleWinner = getWinnerStatistics(2, sequenceMark);
 
     if (possibleWinner === null) {
@@ -184,14 +185,14 @@ const Main = () => {
     return true;
   }
   
-  const updateCells = (combination: CellType[]): CellType[] => (
-    combination.map(({ rowPosition, columnPosition }) => board[rowPosition][columnPosition])
+  const updateCellsFromSequence = (sequence: SequenceType): CellType[] => (
+    sequence.map(({ rowPosition, columnPosition }) => board[rowPosition][columnPosition])
   );
 
   const fightBack = () => {
     switch(difficultyLevel) {
       case 'Fácil':
-        if (finishWinnerSequence('O', 'O')) {
+        if (finishWinnerSequence('O')) {
           break;
         }
 
@@ -199,11 +200,11 @@ const Main = () => {
         break;
 
       case 'Médio':
-        if (finishWinnerSequence('O', 'O')) {
+        if (finishWinnerSequence('O')) {
           break;
         }
 
-        if (finishWinnerSequence('X', 'O')) {
+        if (finishWinnerSequence('X')) {
           break;
         }
 
@@ -211,15 +212,15 @@ const Main = () => {
         break;
 
       case 'Impossível':
-        if (finishWinnerSequence('O', 'O')) {
+        if (finishWinnerSequence('O')) {
           break;
         }
 
-        if (finishWinnerSequence('X', 'O')) {
+        if (finishWinnerSequence('X')) {
           break;
         }
 
-        const chadCombinations: CellType[] = updateCells([
+        const chadSequence: SequenceType = updateCellsFromSequence([
           { rowPosition: 1, columnPosition: 1 }, // Centro
           { rowPosition: 0, columnPosition: 0 }, // Diagonais \/
           { rowPosition: 0, columnPosition: 2 },
@@ -227,7 +228,7 @@ const Main = () => {
           { rowPosition: 2, columnPosition: 2 }
         ]);
 
-        const unmarkedCells = getUnmarkedCells(chadCombinations);
+        const unmarkedCells = getUnmarkedCells(chadSequence);
 
         if (unmarkedCells.length === 0) {
           markRandomCell();
@@ -236,26 +237,14 @@ const Main = () => {
 
         const { rowPosition, columnPosition } = unmarkedCells.at(0) as CellType;
         markCell(rowPosition, columnPosition);
-        /**
-         * TODO
-         * Fazer a mesma coisa com o médio mas ter preferência
-         * pelo centro, extremos e depois pelas direções cardeais básicas
-         * 
-         * [00][01][02]
-         * [10][11][12]
-         * [20][21][22]
-         */
         break;
-      
-      default:
-        throw new Error('Invalid difficulty level.');
     }
   }
   
-  const getWinnerStatistics = (sequenceNumber: number, winnerMark?: MarkType): WinnerStatisticsType | null => {
-    const marks: MarkType[] = winnerMark ? [winnerMark] : ['X', 'O'];
+  const getWinnerStatistics = (sequenceNumber: number = 3, winnerMark?: MarkType): WinnerStatisticsType | null => {
+    const marks: MarkType[] = winnerMark ? [winnerMark] : ['X'];
 
-    const combinations: CellType[][] = [
+    const winnerSequences: SequenceType[] = [
       [{ rowPosition: 0, columnPosition: 0 }, { rowPosition: 0, columnPosition: 1 }, { rowPosition: 0, columnPosition: 2 }],
       [{ rowPosition: 1, columnPosition: 0 }, { rowPosition: 1, columnPosition: 1 }, { rowPosition: 1, columnPosition: 2 }],
       [{ rowPosition: 2, columnPosition: 0 }, { rowPosition: 2, columnPosition: 1 }, { rowPosition: 2, columnPosition: 2 }],
@@ -267,10 +256,10 @@ const Main = () => {
     ];
 
     for (const mark of marks) {
-      for (const combination of combinations) {
+      for (const possibleWinnerSequence of winnerSequences) {
         let checksum: number = 0;
 
-        for (const { rowPosition, columnPosition } of combination) {
+        for (const { rowPosition, columnPosition } of possibleWinnerSequence) {
           const { mark: markOnTheBoard } = board[rowPosition][columnPosition];
 
           if (markOnTheBoard === mark) {
@@ -279,10 +268,11 @@ const Main = () => {
         }
 
         if (checksum === sequenceNumber) {
-          const winnerSequence = updateCells(combination);
+          const winnerSequence = updateCellsFromSequence(possibleWinnerSequence);
           const unmarkedCells = getUnmarkedCells(winnerSequence);
+          const isAnotherCellsEmpty = unmarkedCells.length === 3 - sequenceNumber;
 
-          if (unmarkedCells.length === 3 - sequenceNumber) {
+          if (isAnotherCellsEmpty) {
             return ({ winnerSequence, matchResult: mark });
           }
         }
@@ -364,7 +354,7 @@ const Main = () => {
       <Board
         board={board}
         tileset={tileset}
-        gameOption={gameOption}
+        hasAnotherPlayer={gameOption === 'Dois jogadores'}
         isFirstPlayerTurn={isFirstPlayerTurn}
         hasBeenInitialized={hasBeenInitialized}
         markCell={markCell} />

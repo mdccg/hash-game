@@ -21,7 +21,6 @@
 - Substituir o `alert` por uma mensagem mais robusta
 - Adicionar _tileset_ do Leandro
 - Adicionar o tamanho de todos os ícones no arquivo `theme.ts`
-- Voltar com a antiga função `getWinner`, substituir os dois últimos laços de repetição por `if` _statements_ e criar uma função `searchByVictoryPattern` que retorne a célula não marcada de uma sequência de vitória quase completa
 
 ## Motivação
 

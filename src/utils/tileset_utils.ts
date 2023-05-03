@@ -1,12 +1,12 @@
-import MatchResultType from './../types/MatchResultType';
-import TilesetType from './../types/TilesetType';
-import DefaultCross from './../../assets/default-cross.png';
+import { ImageSourcePropType } from 'react-native';
 import DefaultCircle from './../../assets/default-circle.png';
+import DefaultCross from './../../assets/default-cross.png';
 import DefaultDraw from './../../assets/default-draw.png';
 import MinecraftBabyZombie from './../../assets/minecraft-baby-zombie.png';
 import MinecraftHerobrineFace from './../../assets/minecraft-herobrine-face.png';
 import MinecraftNetheriteSword from './../../assets/minecraft-netherite-sword.png';
-import { ImageSourcePropType } from 'react-native';
+import MatchResultType from './../types/MatchResultType';
+import TilesetType from './../types/TilesetType';
 
 export const getSource = (matchResult: MatchResultType, tileset: TilesetType): ImageSourcePropType => {
   switch(tileset) {
@@ -33,8 +33,5 @@ export const getSource = (matchResult: MatchResultType, tileset: TilesetType): I
         case 'Velha':
           return MinecraftBabyZombie;
       }
-
-    default:
-      throw new Error('Invalid tileset.');
   }
 }

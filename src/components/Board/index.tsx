@@ -6,7 +6,7 @@ import { BoardWrapper, BottomCell, BottomLeftCell, BottomRightCell, CenterCell, 
 type BoardProps = {
   board: BoardType;
   tileset: TilesetType;
-  gameOption: GameOptionType;
+  hasAnotherPlayer: boolean;
   isFirstPlayerTurn: boolean;
   hasBeenInitialized: boolean;
   markCell: (rowPosition: number, columnPosition: number) => void;
@@ -15,12 +15,11 @@ type BoardProps = {
 const Board = ({
   board,
   tileset,
-  gameOption,
+  hasAnotherPlayer,
   isFirstPlayerTurn,
   hasBeenInitialized,
   markCell
 }: BoardProps) => {
-  const hasAnotherPlayer: boolean = gameOption === 'Dois jogadores';
   
   return (
     <>
@@ -36,10 +35,10 @@ const Board = ({
                 {row.map((Cell, indexColumn) => (
                   <Cell
                     key={`cell-${indexRow}-${indexColumn}`}
-                    markCell={markCell}
-                    disabled={!isFirstPlayerTurn && !hasAnotherPlayer}
                     cell={board[indexRow][indexColumn]}
-                    tileset={tileset} />
+                    tileset={tileset}
+                    disabled={!isFirstPlayerTurn && !hasAnotherPlayer}
+                    markCell={markCell} />
                 ))}
               </Row>
             ))

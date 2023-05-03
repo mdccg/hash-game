@@ -1,17 +1,17 @@
-import { useEffect, useState, Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import CellType from './../../types/CellType';
+import MarkType from './../../types/MarkType';
 import TilesetType from './../../types/TilesetType';
-import { CellWrapper } from './styles';
 import { getIconComponent } from './../../utils/react_utils';
-import MarkType from '../../types/MarkType';
+import { CellWrapper } from './styles';
 
 type CellProps = {
   style?: StyleProp<ViewStyle>;
-  markCell: (x: number, y: number) => void;
-  disabled: boolean;
   cell: CellType;
   tileset: TilesetType;
+  disabled: boolean;
+  markCell: (x: number, y: number) => void;
 }
 
 const Cell = ({
