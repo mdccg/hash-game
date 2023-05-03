@@ -18,7 +18,7 @@ import TilesetType from './../../types/TilesetType';
 import { useEffectDeps } from './../../utils/react_utils';
 import { MainWrapper, RestartButton, RestartButtonText } from './styles';
 
-type GetWinnerFunctionReturnType = {
+type WinnerStatisticsType = {
   matchResult: MatchResultType;
   winnerSequence?: CellType[];
 }
@@ -42,14 +42,13 @@ const Main = () => {
   );
 
   const [gameOption, setGameOption] = useState<GameOptionType>('Contra a Máquina');
-  const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevelType>('Fácil');
+  const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevelType>('Médio');
   const [isFirstPlayerTurn, setIsFirstPlayerTurn] = useState<boolean>(true);
   const [punctuations, setPuctuations] = useState<PunctuationType[]>(getInitialPunctuationsValue());
   const [previousMatches, setPreviousMatches] = useState<MatchType[]>([]);
   const [board, setBoard] = useState<BoardType>([]);
   const [hasBeenInitialized, setHasBeenInitialized] = useState<boolean>(false);
-  const [tileset, setTileset] = useState<TilesetType>('Minecraft');
-  const [resetFlag, setResetFlag] = useState<boolean>(false);
+  const [tileset, setTileset] = useState<TilesetType>('Padrão');
   const [hasBeenTotallyReseted, setHasBeenTotallyReseted] = useState<boolean>(false);
   const [fightBackTimeout, setFightBackTimeout] = useState<NodeJS.Timeout | null>(null);
   const [difficultyLevelPickerOptions] = useState<PickerOptionType[]>([
@@ -103,6 +102,7 @@ const Main = () => {
 
     for (let i = 0; i < 3; ++i) {
       currentBoard[i] = [];
+
       for (let j = 0; j < 3; ++j) {
         const cell: CellType = { rowPosition: i, columnPosition: j, mark: undefined };
         currentBoard[i][j] = cell;
@@ -113,15 +113,17 @@ const Main = () => {
     setBoard(currentBoard);
     setHasBeenInitialized(true);
     setHasBeenTotallyReseted(true);
-    clearTimeout(fightBackTimeout);
+    if (fightBackTimeout !== null) {
+      clearTimeout(fightBackTimeout);
+    }
   }
 
-  const markCell = (rowPosition: number, columnPosition: number) => {
+  const markCell = (rowPosition: number, columnPosition: number, mark?: MarkType) => {
     let currentBoard = [...board];
     let cell: CellType = {
       rowPosition,
       columnPosition,
-      mark: isFirstPlayerTurn ? 'X' : 'O'
+      mark: mark || (isFirstPlayerTurn ? 'X' : 'O')
     };
 
     currentBoard[rowPosition][columnPosition] = cell;
@@ -129,60 +131,119 @@ const Main = () => {
     setIsFirstPlayerTurn(!isFirstPlayerTurn);
     setBoard(currentBoard);
 
-    /**
-     * TODO
-     * Destacar a sequência vencedora antes de mostrar o painel da vitória
-     */
-    const { winnerSequence, matchResult: possibleWinner } = getWinner(3);
-
+    const possibleWinner = getWinnerStatistics(3);
+    
     if (possibleWinner !== null) {
-      savePunctuation(possibleWinner);
-      saveMatch(possibleWinner, currentBoard);
+      /**
+       * TODO
+       * Destacar a sequência vencedora antes de mostrar o painel da vitória
+       */
+      const { matchResult, winnerSequence } = possibleWinner;
+
+      savePunctuation(matchResult);
+      saveMatch(matchResult, currentBoard);
 
       /**
        * TODO
        * Trocar isso por um VictoryPanel
        */
-      alert(possibleWinner !== 'Velha' ? `${possibleWinner} ganhou!` : 'Deu velha!');
+      alert(matchResult !== 'Velha' ? `${matchResult} ganhou!` : 'Deu velha!');
       
       setHasBeenTotallyReseted(false);
-      resetBoard();
+      initializeBoard();
     }
   }
 
   const markRandomCell = () => {
     const unmarkedCells = getUnmarkedCells();
     const randomIndex = Math.floor(Math.random() * unmarkedCells.length);
-    const randomCell = unmarkedCells[randomIndex]; // Marca aleatoriamente
+    const randomCell = unmarkedCells[randomIndex];
     const { rowPosition, columnPosition } = randomCell;
     markCell(rowPosition, columnPosition);
   }
 
-  const getUnmarkedCells = (): CellType[] => {
-    let currentBoard = [...board];
-    const unmarkedCells = currentBoard.flat().filter((cell) => !cell.mark);
+  const getUnmarkedCells = (cellsArg?: CellType[]): CellType[] => {
+    let cells = cellsArg || [...board];
+    const unmarkedCells = cells.flat().filter((cell) => !cell.mark);
     return unmarkedCells;
   }
+
+  const finishWinnerSequence = (sequenceMark: MarkType, finishingMark: MarkType): boolean => {
+    const possibleWinner = getWinnerStatistics(2, sequenceMark);
+
+    if (possibleWinner === null) {
+      return false;
+    }
+
+    const { winnerSequence } = possibleWinner;
+    const remainingCell = getUnmarkedCells(winnerSequence).at(0) as CellType;
+    const { rowPosition, columnPosition } = remainingCell;
+
+    markCell(rowPosition, columnPosition, finishingMark);
+
+    return true;
+  }
+  
+  const updateCells = (combination: CellType[]): CellType[] => (
+    combination.map(({ rowPosition, columnPosition }) => board[rowPosition][columnPosition])
+  );
 
   const fightBack = () => {
     switch(difficultyLevel) {
       case 'Fácil':
+        if (finishWinnerSequence('O', 'O')) {
+          break;
+        }
+
         markRandomCell();
         break;
 
       case 'Médio':
-        /**
-         * TODO
-         * Implementar modo médio que usará a função getWinner para
-         * impedir que o jogador ganhe a partida
-         */
+        if (finishWinnerSequence('O', 'O')) {
+          break;
+        }
+
+        if (finishWinnerSequence('X', 'O')) {
+          break;
+        }
+
+        markRandomCell();
         break;
 
       case 'Impossível':
+        if (finishWinnerSequence('O', 'O')) {
+          break;
+        }
+
+        if (finishWinnerSequence('X', 'O')) {
+          break;
+        }
+
+        const chadCombinations: CellType[] = updateCells([
+          { rowPosition: 1, columnPosition: 1 }, // Centro
+          { rowPosition: 0, columnPosition: 0 }, // Diagonais \/
+          { rowPosition: 0, columnPosition: 2 },
+          { rowPosition: 2, columnPosition: 0 },
+          { rowPosition: 2, columnPosition: 2 }
+        ]);
+
+        const unmarkedCells = getUnmarkedCells(chadCombinations);
+
+        if (unmarkedCells.length === 0) {
+          markRandomCell();
+          break;
+        }
+
+        const { rowPosition, columnPosition } = unmarkedCells.at(0) as CellType;
+        markCell(rowPosition, columnPosition);
         /**
          * TODO
          * Fazer a mesma coisa com o médio mas ter preferência
          * pelo centro, extremos e depois pelas direções cardeais básicas
+         * 
+         * [00][01][02]
+         * [10][11][12]
+         * [20][21][22]
          */
         break;
       
@@ -191,8 +252,8 @@ const Main = () => {
     }
   }
   
-  const getWinner = (times: number): GetWinnerFunctionReturnType | null => {
-    const marks: MarkType[] = ['X', 'O'];
+  const getWinnerStatistics = (sequenceNumber: number, winnerMark?: MarkType): WinnerStatisticsType | null => {
+    const marks: MarkType[] = winnerMark ? [winnerMark] : ['X', 'O'];
 
     const combinations: CellType[][] = [
       [{ rowPosition: 0, columnPosition: 0 }, { rowPosition: 0, columnPosition: 1 }, { rowPosition: 0, columnPosition: 2 }],
@@ -210,27 +271,22 @@ const Main = () => {
         let checksum: number = 0;
 
         for (const { rowPosition, columnPosition } of combination) {
-          if (board[rowPosition][columnPosition].mark === mark) {
+          const { mark: markOnTheBoard } = board[rowPosition][columnPosition];
+
+          if (markOnTheBoard === mark) {
             ++checksum;
           }
         }
 
-        if (checksum === times) {
-          return ({ winnerSequence: combination, matchResult: mark });
+        if (checksum === sequenceNumber) {
+          const winnerSequence = updateCells(combination);
+          const unmarkedCells = getUnmarkedCells(winnerSequence);
+
+          if (unmarkedCells.length === 3 - sequenceNumber) {
+            return ({ winnerSequence, matchResult: mark });
+          }
         }
       }
-      // if (
-      //   board[0][0].mark === mark && board[0][1].mark === mark && board[0][2].mark === mark ||
-      //   board[1][0].mark === mark && board[1][1].mark === mark && board[1][2].mark === mark ||
-      //   board[2][0].mark === mark && board[2][1].mark === mark && board[2][2].mark === mark ||
-      //   board[0][0].mark === mark && board[1][0].mark === mark && board[2][0].mark === mark ||
-      //   board[0][1].mark === mark && board[1][1].mark === mark && board[2][1].mark === mark ||
-      //   board[0][2].mark === mark && board[1][2].mark === mark && board[2][2].mark === mark ||
-      //   board[0][0].mark === mark && board[1][1].mark === mark && board[2][2].mark === mark ||
-      //   board[0][2].mark === mark && board[1][1].mark === mark && board[2][0].mark === mark
-      //   ) {
-      //   return mark;
-      // }
     }
 
     const unmarkedCells = getUnmarkedCells();
@@ -242,56 +298,41 @@ const Main = () => {
     return null;
   }
 
-  /**
-   * TODO
-   * Usar laços de repetição
-   */
-  const searchByVictoryPattern = (): CellType | null => {
-    /*
-     * [00][01][02]
-     * [10][11][12]
-     * [20][21][22]
-     */
-
-    return null;
-  }
-
-  const resetBoard = () => setResetFlag(!resetFlag);
-
   const savePunctuation = (winner: MatchResultType) => {
-    let currentPunctuations = [...punctuations];
-    let winnerPunctuation = currentPunctuations.find(({ matchResult }) => matchResult === winner);
+    const currentPunctuations = [...punctuations];
+    let winnerPunctuation = currentPunctuations.find(({ matchResult }) => matchResult === winner) as PunctuationType;
     ++winnerPunctuation.score;
     setPuctuations(currentPunctuations);
   }
 
   const saveMatch = (winner: MatchResultType, board: BoardType) => {
-    let currentPreviousMatches = [...previousMatches];
-    let currentMatch: MatchType = { winner, gameOption, difficultyLevel, board };
+    const currentPreviousMatches = [...previousMatches];
+    const createdAt = new Date();
+    const currentMatch: MatchType = { winner, gameOption, difficultyLevel, board, createdAt };
     currentPreviousMatches.push(currentMatch);
     setPreviousMatches(currentPreviousMatches);
   }
   
   const getDefaultDifficultyLevelPickerOption = (): PickerOptionType => {
     if (gameOption === 'Dois jogadores') {
-      return difficultyLevelPickerOptions.at(3);
+      return difficultyLevelPickerOptions.at(3) as PickerOptionType;
     } else {
-      return difficultyLevelPickerOptions.find(({ optionLabel }) => optionLabel === difficultyLevel);
+      return difficultyLevelPickerOptions.find(({ optionLabel }) => optionLabel === difficultyLevel) as PickerOptionType;
     }
   }
 
   const getDefaultTilesetPickerOption = (): PickerOptionType => (
-    tilesetPickerOptions.find(({ optionLabel }) => optionLabel === tileset)
+    tilesetPickerOptions.find(({ optionLabel }) => optionLabel === tileset) as PickerOptionType
   );
 
   const resetPunctuations = () => {
-    let newPunctuations = getInitialPunctuationsValue();
-    setPuctuations(newPunctuations);
+    let punctuations = getInitialPunctuationsValue();
+    setPuctuations(punctuations);
   }
 
   useEffect(() => {
     initializeBoard();
-  }, [resetFlag]);
+  }, []);
 
   useEffectDeps(() => {
     if (hasBeenTotallyReseted && !isFirstPlayerTurn && gameOption === 'Contra a Máquina') {
@@ -311,7 +352,7 @@ const Main = () => {
           options={difficultyLevelPickerOptions}
           finallyTreatment={() => {
             resetPunctuations();
-            resetBoard();
+            initializeBoard();
           }} />
       </Header>
 
@@ -328,7 +369,7 @@ const Main = () => {
         hasBeenInitialized={hasBeenInitialized}
         markCell={markCell} />
       
-      <RestartButton onPress={resetBoard}>
+      <RestartButton onPress={initializeBoard}>
         <RestartButtonText>Reiniciar jogo</RestartButtonText>
       </RestartButton>
 

@@ -8,14 +8,13 @@ import PickerOptionType from './../../types/PickerOptionType';
 import { PickerLabel, PickerWrapper } from './styles';
 
 type DifficultyLevelPickerProps = {
-  label?: string;
-  defaultOption?: PickerOptionType;
+  defaultOption: PickerOptionType;
   options: PickerOptionType[];
   finallyTreatment?: () => void;
 }
 
-const Picker = ({ label, defaultOption, options, finallyTreatment }: DifficultyLevelPickerProps) => {
-  const [selectedOption, setSelectedOption] = useState<PickerOptionType | null>(defaultOption || null);
+const Picker = ({ defaultOption, options, finallyTreatment }: DifficultyLevelPickerProps) => {
+  const [selectedOption, setSelectedOption] = useState<PickerOptionType>(defaultOption);
   const [isMenuOpen, setIsOpen] = useState<boolean>(false);
 
   const openMenu = () => {
@@ -24,10 +23,6 @@ const Picker = ({ label, defaultOption, options, finallyTreatment }: DifficultyL
 
   const closeMenu = () => {
     setIsOpen(false);
-  }
-
-  if (!label && !defaultOption) {
-    throw new Error('Invalid props.');
   }
 
   return (
@@ -39,7 +34,6 @@ const Picker = ({ label, defaultOption, options, finallyTreatment }: DifficultyL
             size={16}
             color={theme.colors.text} />
             
-          {label && <PickerLabel>{label}</PickerLabel>}
           {defaultOption && !selectedOption && <PickerLabel>{defaultOption.optionLabel}</PickerLabel>}
           {selectedOption && <PickerLabel>{selectedOption.optionLabel}</PickerLabel>}
         </PickerWrapper>

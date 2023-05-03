@@ -12,6 +12,7 @@ type MatchType = {
   gameOption: GameOptionType;
   difficultyLevel: DifficultyLevelType;
   board: BoardType;
+  createdAt: Date;
 }
 
 export default MatchType;

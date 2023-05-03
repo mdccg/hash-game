@@ -1,35 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import CellType from './../../types/CellType';
 import TilesetType from './../../types/TilesetType';
 import { CellWrapper } from './styles';
 import { getIconComponent } from './../../utils/react_utils';
-import MatchResultType from './../../types/MatchResultType';
+import MarkType from '../../types/MarkType';
 
 type CellProps = {
   style?: StyleProp<ViewStyle>;
-  rowPosition: number;
-  columnPosition: number;
   markCell: (x: number, y: number) => void;
   disabled: boolean;
-  cell?: CellType;
+  cell: CellType;
   tileset: TilesetType;
 }
 
 const Cell = ({
   style,
-  rowPosition,
-  columnPosition,
   markCell,
   disabled,
   cell,
   tileset,
 }: CellProps) => {
-  const [mark, setMark] = useState<MatchResultType | undefined>();
+  const [mark, setMark] = useState<MarkType | undefined>();
   const [size] = useState<number>(64);
-  const IconComponent = getIconComponent(mark);
+  const IconComponent = mark ? getIconComponent(mark) : Fragment;
 
   const handlePress = () => {
+    const { rowPosition, columnPosition } = cell;
     markCell(rowPosition, columnPosition);
   }
 
