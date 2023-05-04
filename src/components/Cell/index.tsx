@@ -5,21 +5,24 @@ import MarkType from './../../types/MarkType';
 import TilesetType from './../../types/TilesetType';
 import { getIconComponent } from './../../utils/react_utils';
 import { CellWrapper } from './styles';
+import theme from '../../styles/theme';
 
 type CellProps = {
   style?: StyleProp<ViewStyle>;
   cell: CellType;
   tileset: TilesetType;
   disabled: boolean;
+  isHighlighted: boolean;
   markCell: (x: number, y: number) => void;
 }
 
 const Cell = ({
   style,
-  markCell,
-  disabled,
   cell,
   tileset,
+  disabled,
+  isHighlighted,
+  markCell,
 }: CellProps) => {
   const [mark, setMark] = useState<MarkType | undefined>();
   const [size] = useState<number>(64);
@@ -39,7 +42,9 @@ const Cell = ({
   return (
     <CellWrapper
       underlayColor="transparent"
-      style={style}
+      style={[style, {
+        backgroundColor: isHighlighted ? theme.colors.highlight : theme.colors.background
+      }]}
       disabled={disabled || mark !== undefined}
       onPress={handlePress}>
       <>

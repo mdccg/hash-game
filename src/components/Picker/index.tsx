@@ -31,7 +31,7 @@ const Picker = ({ defaultOption, options, finallyTreatment }: DifficultyLevelPic
         <PickerWrapper onPress={openMenu}>
           <FontAwesomeIcon
             name={isMenuOpen ? 'caret-up' : 'caret-down'}
-            size={16}
+            size={theme.sizes.iconSize}
             color={theme.colors.text} />
             
           {defaultOption && !selectedOption && <PickerLabel>{defaultOption.optionLabel}</PickerLabel>}

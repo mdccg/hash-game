@@ -33,7 +33,7 @@ const PunctuationComponent = ({
 
   return (
     <PunctuationWrapper style={[style, { borderBottomColor: customBorderBottomColor }]}>
-      <IconComponent size={16} tileset={tileset} />
+      <IconComponent size={theme.sizes.iconSize} tileset={tileset} />
       <ScoreNumberArea>
         <ScoreNumber>{score === 0 ? '-' : score}</ScoreNumber>
       </ScoreNumberArea>

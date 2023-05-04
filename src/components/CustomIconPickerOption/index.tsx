@@ -1,3 +1,4 @@
+import theme from '../../styles/theme';
 import TilesetType from './../../types/TilesetType';
 import CircleIcon from './../CircleIcon';
 import CrossIcon from './../CrossIcon';
@@ -10,9 +11,9 @@ type CustomIconPickerOptionProps = {
 const CustomIconPickerOption = ({ tileset }: CustomIconPickerOptionProps) => {
   return (
     <CustomIconWrapper>
-      <CrossIcon  tileset={tileset} size={16} />
+      <CrossIcon  tileset={tileset} size={theme.sizes.iconSize} />
       <CustomIconWrapperGap />
-      <CircleIcon tileset={tileset} size={16} />
+      <CircleIcon tileset={tileset} size={theme.sizes.iconSize} />
     </CustomIconWrapper>
   );
 }

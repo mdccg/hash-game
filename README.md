@@ -16,11 +16,12 @@
 - ~~Seletor de dificuldade~~
 - ~~Seletor de textura~~
 - ~~Adicionar uma _hitbox_ para o hífen na pontuação~~
-- Destacar a combinação vencedora antes de resetar o tabuleiro
+- ~~Destacar a combinação vencedora antes de resetar o tabuleiro~~
+- ~~Substituir o `alert` por uma mensagem mais robusta~~
+- ~~Adicionar o tamanho de todos os ícones no arquivo `theme.ts`~~
 - Tela do histórico
-- Substituir o `alert` por uma mensagem mais robusta
 - Adicionar _tileset_ do Leandro
-- Adicionar o tamanho de todos os ícones no arquivo `theme.ts`
+- Arrumar uma _splash screen_ melhor
 
 ## Motivação
 

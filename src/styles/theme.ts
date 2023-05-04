@@ -1,9 +1,13 @@
 const theme = {
   colors: {
+    highlight: 'hsl(174, 81%, 46%)',
     background: 'hsl(174, 81%, 41%)',
     boardBorder: 'hsl(174, 81%, 37%)',
     border: '#b2bec3',
-    text: '#70757a'
+    text: '#70757a',
+    crossDefaultColor: 'rgb(84, 84, 84)',
+    circleDefaultColor: 'rgb(242, 235, 211)',
+    whiteFlagColor: '#E1E8ED',
   },
 
   fonts: {
@@ -12,8 +16,9 @@ const theme = {
   },
 
   sizes: {
-    cellSize: '100px',
-    borderSize: '8px',
+    cellSize: 100,
+    borderSize: 8,
+    iconSize: 16,
   }
 };
 
