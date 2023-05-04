@@ -10,10 +10,10 @@ import { PickerLabel, PickerWrapper } from './styles';
 type DifficultyLevelPickerProps = {
   defaultOption: PickerOptionType;
   options: PickerOptionType[];
-  finallyTreatment?: () => void;
+  finallyCallback?: () => void;
 }
 
-const Picker = ({ defaultOption, options, finallyTreatment }: DifficultyLevelPickerProps) => {
+const Picker = ({ defaultOption, options, finallyCallback: finallyTreatment }: DifficultyLevelPickerProps) => {
   const [selectedOption, setSelectedOption] = useState<PickerOptionType>(defaultOption);
   const [isMenuOpen, setIsOpen] = useState<boolean>(false);
 

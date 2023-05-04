@@ -1,6 +1,6 @@
-import CellType from '../../types/CellType';
-import MatchResultType from '../../types/MatchResultType';
-import VictoryPanel from '../VictoryPanel';
+import CellType from './../../types/CellType';
+import MatchResultType from './../../types/MatchResultType';
+import VictoryPanel from './../VictoryPanel';
 import BoardType from './../../types/BoardType';
 import TilesetType from './../../types/TilesetType';
 import { BoardWrapper, BottomCell, BottomLeftCell, BottomRightCell, CenterCell, LeftCell, RightCell, Row, TopCell, TopLeftCell, TopRightCell } from './styles';

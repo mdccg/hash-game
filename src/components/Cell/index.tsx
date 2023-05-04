@@ -5,7 +5,7 @@ import MarkType from './../../types/MarkType';
 import TilesetType from './../../types/TilesetType';
 import { getIconComponent } from './../../utils/react_utils';
 import { CellWrapper } from './styles';
-import theme from '../../styles/theme';
+import theme from './../../styles/theme';
 
 type CellProps = {
   style?: StyleProp<ViewStyle>;

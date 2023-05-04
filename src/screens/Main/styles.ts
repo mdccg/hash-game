@@ -1,8 +1,9 @@
 import styled from 'styled-components/native';
 
 export const MainWrapper = styled.View`
-  background-color: 'white';
+  background-color: white;
   flex-direction: column;
+  flex: 1;
 `;
 
 export const RestartButton = styled.TouchableOpacity`

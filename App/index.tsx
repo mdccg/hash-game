@@ -1,15 +1,17 @@
 import { Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato';
+import { NavigationContainer } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback } from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ThemeProvider } from 'styled-components';
-import Main from './../src/screens/Main';
+import MainStackNavigator from './../src/routes/MainStackNavigator';
 import theme from './../src/styles/theme';
 import { AppWrapper } from './styles';
-import { Provider as PaperProvider } from 'react-native-paper';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,14 +29,16 @@ export default function App() {
   }
 
   return (
-    <PaperProvider>
       <AppWrapper onLayout={onLayoutRootView}>
-        <ThemeProvider theme={theme}>
-          <StatusBar style="auto" />
-          <View style={{ height: getStatusBarHeight() }} />
-          <Main />
-        </ThemeProvider>
-      </AppWrapper>
-    </PaperProvider>
+        <NavigationContainer>
+          <PaperProvider>
+            <ThemeProvider theme={theme}>
+              <StatusBar style="auto" />
+              <View style={{ height: getStatusBarHeight() }} />
+              <MainStackNavigator />
+            </ThemeProvider>
+          </PaperProvider>
+        </NavigationContainer>
+    </AppWrapper>
   );
 }

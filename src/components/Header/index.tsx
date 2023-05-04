@@ -5,7 +5,6 @@ type HeaderProps = {
 }
 
 const Header = ({ children }: HeaderProps) => {
-
   return (
     <HeaderWrapper>
       {children}

@@ -19,7 +19,7 @@ import TilesetType from './../../types/TilesetType';
 import { useEffectDeps } from './../../utils/react_utils';
 import { MainWrapper, RestartButton, RestartButtonText } from './styles';
 import config from './../../config';
-import { shuffleArray } from '../../utils/javascript_utils';
+import { shuffleArray } from './../../utils/javascript_utils';
 
 type WinnerStatisticsType = {
   matchResult: MatchResultType;
@@ -353,7 +353,7 @@ const Main = () => {
         <Picker
           defaultOption={getDefaultDifficultyLevelPickerOption()}
           options={difficultyLevelPickerOptions}
-          finallyTreatment={() => {
+          finallyCallback={() => {
             resetPunctuations();
             initializeBoard();
           }} />

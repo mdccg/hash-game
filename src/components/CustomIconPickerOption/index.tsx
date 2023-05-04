@@ -1,4 +1,4 @@
-import theme from '../../styles/theme';
+import theme from './../../styles/theme';
 import TilesetType from './../../types/TilesetType';
 import CircleIcon from './../CircleIcon';
 import CrossIcon from './../CrossIcon';

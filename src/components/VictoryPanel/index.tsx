@@ -1,9 +1,8 @@
-import { Text } from 'react-native';
-import MatchResultType from '../../types/MatchResultType';
-import TilesetType from '../../types/TilesetType';
-import { getIconComponent } from '../../utils/react_utils';
+import MatchResultType from './../../types/MatchResultType';
+import TilesetType from './../../types/TilesetType';
+import { getIconComponent } from './../../utils/react_utils';
 import { VictoryMessage, VictoryPanelWrapper } from './styles';
-import theme from '../../styles/theme';
+import theme from './../../styles/theme';
 
 type VictoryPanelProps = {
   tileset: TilesetType;
