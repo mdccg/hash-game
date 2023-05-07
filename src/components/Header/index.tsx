@@ -1,7 +1,7 @@
 import { HeaderWrapper } from './styles';
 
 type HeaderProps = {
-  children?: JSX.Element;
+  children?: JSX.Element[];
 }
 
 const Header = ({ children }: HeaderProps) => {

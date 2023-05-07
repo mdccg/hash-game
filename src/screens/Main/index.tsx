@@ -1,10 +1,14 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
+import Stopwatch from '../../components/Stopwatch';
+import { RootStackParamList } from '../../routes/MainStackNavigator';
 import Board from './../../components/Board';
 import CustomIconPickerOption from './../../components/CustomIconPickerOption';
 import Footer from './../../components/Footer';
 import Header from './../../components/Header';
 import Picker from './../../components/Picker';
 import Scoreboard from './../../components/Scoreboard';
+import config from './../../config';
 import BoardType from './../../types/BoardType';
 import CellType from './../../types/CellType';
 import DifficultyLevelType from './../../types/DifficultyLevelType';
@@ -16,17 +20,19 @@ import PickerOptionType from './../../types/PickerOptionType';
 import PositionType from './../../types/PositionType';
 import PunctuationType from './../../types/PunctuationType';
 import TilesetType from './../../types/TilesetType';
-import { useEffectDeps } from './../../utils/react_utils';
-import { MainWrapper, RestartButton, RestartButtonText } from './styles';
-import config from './../../config';
 import { shuffleArray } from './../../utils/javascript_utils';
+import { useEffectDeps } from './../../utils/react_utils';
+import { HistoryButton, MainWrapper, RestartButton, RestartButtonText } from './styles';
+import HistoryIcon from '../../components/HistoryIcon';
 
 type WinnerStatisticsType = {
   matchResult: MatchResultType;
   winnerSequence?: CellType[];
 }
 
-const Main = () => {
+type MainProps = NativeStackScreenProps<RootStackParamList, 'Main'>;
+
+const Main = ({ navigation: { navigate } }: MainProps) => {
   const getInitialPunctuationsValue = (): PunctuationType[] => (
     [
       {
@@ -102,6 +108,9 @@ const Main = () => {
   const [highlightedSequence, setHighlightedSequence] = useState<CellType[]>([]);
   const [currentWinner, setCurrentWinner] = useState<MatchResultType | null>(null);
   const [currentWinnerTimeout, setCurrentWinnerTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [stopwatch, setStopwatch] = useState<NodeJS.Timer | null>(null);
+  const [counter, setCounter] = useState<number>(0);
 
   const initializeBoard = () => {
     let currentBoard: BoardType = [];
@@ -115,22 +124,32 @@ const Main = () => {
       }
     }
 
-    setIsFirstPlayerTurn(true);
     setBoard(currentBoard);
-    setHasBeenInitialized(true);
     setHasBeenTotallyReseted(true);
+    setHasBeenInitialized(true);
+    setIsFirstPlayerTurn(true);
     setHighlightedSequence([]);
     setCurrentWinner(null);
-    if (fightBackTimeout !== null) {
-      clearTimeout(fightBackTimeout);
-    }
-    if (currentWinnerTimeout !== null) {
-      clearTimeout(currentWinnerTimeout);
-    }
+    setStartDate(null);
+    setCounter(0);
+    if (fightBackTimeout !== null) clearTimeout(fightBackTimeout);
+    if (currentWinnerTimeout !== null) clearTimeout(currentWinnerTimeout);
+    if (stopwatch) clearInterval(stopwatch);
   }
 
   const markCell = (rowPosition: number, columnPosition: number, mark?: MarkType) => {
     let currentBoard = [...board];
+    let isFirstMark = currentBoard.flat().filter(({ mark }) => !mark).length === 9;
+
+    if (isFirstMark) {
+      setStartDate(new Date());
+      setStopwatch(
+        setInterval(() => {
+          setCounter(counter => counter + 1);
+        }, 1e3)
+      );
+    }
+
     let cell: CellType = {
       rowPosition,
       columnPosition,
@@ -161,6 +180,8 @@ const Main = () => {
           setCurrentWinner(matchResult);
         }, config.highlightInterval * 1000)
       );
+
+      if (stopwatch) clearInterval(stopwatch);
     }
   }
 
@@ -310,8 +331,16 @@ const Main = () => {
 
   const saveMatch = (winner: MatchResultType, board: BoardType) => {
     const currentPreviousMatches = [...previousMatches];
-    const createdAt = new Date();
-    const currentMatch: MatchType = { winner, gameOption, difficultyLevel, board, createdAt };
+    const startDateISOString = (startDate as Date).toISOString();
+    const endDateISOString = new Date().toISOString();
+    const currentMatch: MatchType = {
+      winner,
+      gameOption,
+      difficultyLevel,
+      board,
+      startDateISOString,
+      endDateISOString
+    };
     currentPreviousMatches.push(currentMatch);
     setPreviousMatches(currentPreviousMatches);
   }
@@ -357,7 +386,15 @@ const Main = () => {
             resetPunctuations();
             initializeBoard();
           }} />
+
+        <HistoryButton
+          disabled={previousMatches.length === 0}
+          onPress={() => navigate('MatchesHistory', { previousMatches, tileset })}>
+          <HistoryIcon opacity={previousMatches.length === 0 ? .125 : 1} />
+        </HistoryButton>
       </Header>
+
+      <Stopwatch counter={counter} />
 
       <Scoreboard
         tileset={tileset}
@@ -368,6 +405,7 @@ const Main = () => {
         board={board}
         tileset={tileset}
         currentWinner={currentWinner}
+        isReadOnly={false}
         hasAnotherPlayer={gameOption === 'Dois jogadores'}
         isFirstPlayerTurn={isFirstPlayerTurn}
         hasBeenInitialized={hasBeenInitialized}

@@ -4,11 +4,13 @@ import VictoryPanel from './../VictoryPanel';
 import BoardType from './../../types/BoardType';
 import TilesetType from './../../types/TilesetType';
 import { BoardWrapper, BottomCell, BottomLeftCell, BottomRightCell, CenterCell, LeftCell, RightCell, Row, TopCell, TopLeftCell, TopRightCell } from './styles';
+import { StyleSheet } from 'react-native';
 
 type BoardProps = {
   board: BoardType;
   tileset: TilesetType;
   currentWinner: MatchResultType | null;
+  isReadOnly: boolean;
   hasAnotherPlayer: boolean;
   isFirstPlayerTurn: boolean;
   hasBeenInitialized: boolean;
@@ -16,10 +18,19 @@ type BoardProps = {
   markCell: (rowPosition: number, columnPosition: number) => void;
 }
 
+const { readOnlyStyleSheet } = StyleSheet.create({
+  readOnlyStyleSheet: {
+    backgroundColor: 'white',
+    paddingTop: 0,
+    paddingBottom: 0,
+  }
+});
+
 const Board = ({
   board,
   tileset,
   currentWinner,
+  isReadOnly,
   hasAnotherPlayer,
   isFirstPlayerTurn,
   hasBeenInitialized,
@@ -30,7 +41,7 @@ const Board = ({
   return (
     <>
       {hasBeenInitialized && (
-        <BoardWrapper>
+        <BoardWrapper style={isReadOnly ? readOnlyStyleSheet : {}}>
           {currentWinner ? (
             <VictoryPanel
               tileset={tileset}
@@ -58,6 +69,7 @@ const Board = ({
                           && !hasAnotherPlayer
                           || highlightedSequence.length > 0
                       }
+                      isReadOnly={isReadOnly}
                       isHighlighted={isHighlighted}
                       markCell={markCell} />
                   );

@@ -5,14 +5,11 @@ import MatchResultType from './MatchResultType';
 
 type MatchType = {
   winner: MatchResultType;
-  /**
-   * TODO
-   * Salvar o tabuleiro read-only
-   */
   gameOption: GameOptionType;
   difficultyLevel: DifficultyLevelType;
   board: BoardType;
-  createdAt: Date;
+  startDateISOString: string;
+  endDateISOString: string;
 }
 
 export default MatchType;

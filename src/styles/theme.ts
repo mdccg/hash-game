@@ -7,7 +7,7 @@ const theme = {
     text: '#70757a',
     crossDefaultColor: 'rgb(84, 84, 84)',
     circleDefaultColor: 'rgb(242, 235, 211)',
-    whiteFlagColor: '#E1E8ED',
+    whiteFlagColor: '#e1e8ed',
   },
 
   fonts: {

@@ -4,4 +4,5 @@ export const FooterWrapper = styled.View`
   justify-content: flex-end;
   align-items: center;
   flex: 1;
+  padding-bottom: 32px;
 `;

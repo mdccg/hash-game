@@ -19,9 +19,11 @@
 - ~~Destacar a combinação vencedora antes de resetar o tabuleiro~~
 - ~~Substituir o `alert` por uma mensagem mais robusta~~
 - ~~Adicionar o tamanho de todos os ícones no arquivo `theme.ts`~~
-- Tela do histórico
+- ~~Colocar um timer~~
+- ~~Tela do histórico~~
 - Adicionar _tileset_ do Leandro
 - Arrumar uma _splash screen_ melhor
+- Substituir as três cores principais por uma constante e uma função HSL
 
 ## Motivação
 

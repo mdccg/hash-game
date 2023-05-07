@@ -1,10 +1,8 @@
 import styled, { css } from 'styled-components/native';
 import Cell from './../Cell';
-import { Dimensions } from 'react-native';
 
 export const BoardWrapper = styled.View`
   background-color: ${({ theme }) => theme.colors.background};
-  width: ${Dimensions.get('window').width}px;
   justify-content: center;
   align-items: center;
   padding: 30px 0;

@@ -6,6 +6,13 @@ export const MainWrapper = styled.View`
   flex: 1;
 `;
 
+export const HistoryButton = styled.TouchableOpacity`
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const RestartButton = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;

@@ -4,7 +4,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import 'react-native-gesture-handler';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';

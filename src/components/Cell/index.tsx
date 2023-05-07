@@ -12,6 +12,7 @@ type CellProps = {
   cell: CellType;
   tileset: TilesetType;
   disabled: boolean;
+  isReadOnly: boolean;
   isHighlighted: boolean;
   markCell: (x: number, y: number) => void;
 }
@@ -21,6 +22,7 @@ const Cell = ({
   cell,
   tileset,
   disabled,
+  isReadOnly,
   isHighlighted,
   markCell,
 }: CellProps) => {
@@ -42,9 +44,17 @@ const Cell = ({
   return (
     <CellWrapper
       underlayColor="transparent"
-      style={[style, {
-        backgroundColor: isHighlighted ? theme.colors.highlight : theme.colors.background
-      }]}
+      style={
+        [
+          style,
+          {
+            backgroundColor: isReadOnly ? 'white' : (
+              isHighlighted ? theme.colors.highlight : theme.colors.background
+            ),
+            borderColor: isReadOnly ? theme.colors.text: theme.colors.boardBorder
+          }
+        ]
+      }
       disabled={disabled || mark !== undefined}
       onPress={handlePress}>
       <>
