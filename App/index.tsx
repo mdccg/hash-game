@@ -9,8 +9,8 @@ import 'react-native-gesture-handler';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { ThemeProvider } from 'styled-components';
-import MainStackNavigator from './src/routes/MainStackNavigator';
-import theme from './src/styles/theme';
+import MainStackNavigator from './../src/routes/MainStackNavigator';
+import theme from './../src/styles/theme';
 import { AppWrapper } from './styles';
 
 SplashScreen.preventAutoHideAsync();
