@@ -1,3 +1,3 @@
-type TilesetType = 'Padrão' | 'Minecraft';
+type TilesetType = 'Padrão' | 'Minecraft' | 'TSI';
 
 export default TilesetType;

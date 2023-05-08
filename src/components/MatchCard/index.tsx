@@ -28,7 +28,7 @@ const MatchCard = ({
 
   const formatGameOptionMessage = () => {
     let gameOptionMessage: string;
-    let didFirstPlayerWonMessage: string = winner === 'X' ? 'ganhou' : (winner === 'O' ? 'perdeu!' : 'empatou!');
+    let didFirstPlayerWonMessage: string = winner === 'X' ? 'ganhou!' : (winner === 'O' ? 'perdeu!' : 'empatou!');
 
     switch(gameOption) {
       case 'Dois jogadores':

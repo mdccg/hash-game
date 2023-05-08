@@ -21,7 +21,7 @@
 - ~~Adicionar o tamanho de todos os ícones no arquivo `theme.ts`~~
 - ~~Colocar um timer~~
 - ~~Tela do histórico~~
-- Adicionar _tileset_ do Leandro
+- ~~Adicionar _tileset_ do Leandro~~
 - Arrumar uma _splash screen_ melhor
 - Substituir as três cores principais por uma constante e uma função HSL
 

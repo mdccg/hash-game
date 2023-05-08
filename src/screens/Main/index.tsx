@@ -104,6 +104,13 @@ const Main = ({ navigation: { navigate } }: MainProps) => {
       },
       customIcon: (_) => <CustomIconPickerOption tileset="Minecraft" />
     },
+    {
+      optionLabel: 'TSI',
+      handlePress: () => {
+        setTileset('TSI');
+      },
+      customIcon: (_) => <CustomIconPickerOption tileset="TSI" />
+    }
   ]);
   const [highlightedSequence, setHighlightedSequence] = useState<CellType[]>([]);
   const [currentWinner, setCurrentWinner] = useState<MatchResultType | null>(null);
