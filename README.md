@@ -7,6 +7,7 @@
   - [_To-do list_](#to-do-list)
   - [Motivação](#motivação)
   - [Pilha de tecnologia](#pilha-de-tecnologia)
+  - [Galeria](#galeria)
   - [Como rodar](#como-rodar)
     - [Pré-requisitos](#pré-requisitos)
     - [Passo a passo](#passo-a-passo)
@@ -49,7 +50,12 @@ Este foi o terceiro repositório de código apresentado no [Curso Superior de TS
 
 Os créditos pelas mídias disponibilizadas estão disponíveis [aqui](./assets/README.md).
 
-<!-- Adicionar galeria aqui -->
+## Galeria
+
+<img src="./docs/1-home-screen.jpg" alt="Tela inicial" width="270px" />
+<img src="./docs/2-in-game.jpg"     alt="Durante o jogo" width="270px" />
+<img src="./docs/3-texture.jpg"     alt="Textura dos símbolos" width="270px" />
+<img src="./docs/4-history.jpg"     alt="Histórico de partidas" width="270px" />
 
 ## Como rodar
 
